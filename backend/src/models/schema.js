@@ -22,6 +22,7 @@ Booking.init(
       allowNull: false,
       references: { model: Room, key: 'id' },
     },
+    client_email: { type: DataTypes.STRING, allowNull: false },
     check_in_date: { type: DataTypes.DATEONLY, allowNull: false },
     check_out_date: { type: DataTypes.DATEONLY, allowNull: false },
   },
