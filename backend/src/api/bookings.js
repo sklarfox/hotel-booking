@@ -1,7 +1,7 @@
 import express from 'express'
 import { Booking } from '../models/schema.js'
 import {
-  checkAvailability,
+  checkRoomAvailability,
   getBookingById,
   validRequestDates,
 } from '../services/databaseService.js'
@@ -55,7 +55,7 @@ router.post('/', async (req, res, next) => {
     return
   }
 
-  const isAvailable = await checkAvailability(
+  const isAvailable = await checkRoomAvailability(
     room_id,
     check_in_date,
     check_out_date,

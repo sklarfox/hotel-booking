@@ -23,7 +23,7 @@ export const getBookingById = async id => {
   return await Booking.findByPk(id)
 }
 
-export const checkAvailability = async (
+export const checkRoomAvailability = async (
   roomId,
   reqCheckInDate,
   reqCheckOutDate,
