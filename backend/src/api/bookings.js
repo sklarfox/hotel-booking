@@ -3,8 +3,8 @@ import { Booking } from '../models/schema.js'
 import {
   checkRoomAvailability,
   getBookingById,
-  validRequestDates,
 } from '../services/databaseService.js'
+import { validBookingDates } from '../utils/helpers.js'
 const router = express.Router()
 
 router.get('/', async (req, res) => {
@@ -46,7 +46,7 @@ router.post('/', async (req, res, next) => {
         'Validation Error: Missing required information. Please verify all required fields and try again.',
       )
     return
-  } else if (!validRequestDates(check_in_date, check_out_date)) {
+  } else if (!validBookingDates(check_in_date, check_out_date)) {
     res
       .status(400)
       .send(
