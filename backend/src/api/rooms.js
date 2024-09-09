@@ -82,7 +82,18 @@ router.patch('/:id', async (req, res, next) => {
 })
 
 router.delete('/:id', async (req, res) => {
-  // TODO delete room
+  const id = Number(req.params.id)
+
+  let room
+  try {
+    room = await getRoomById(id)
+  } catch (error) {
+    res.status(400).send(String(error))
+  }
+
+  if (room !== null) {
+    room.destroy()
+  }
   res.send(204)
 })
 
