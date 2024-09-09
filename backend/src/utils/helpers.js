@@ -1,3 +1,4 @@
+import { Op } from 'sequelize'
 import { Room, Booking } from '../models/schema.js'
 
 export const getRoomById = async id => {
@@ -20,4 +21,22 @@ export const getBookingById = async id => {
   }
 
   return await Booking.findByPk(id)
+}
+
+export const checkAvailability = async (
+  roomId,
+  reqCheckInDate,
+  reqCheckOutDate,
+) => {
+  const booking = await Booking.findOne({
+    where: {
+      [Op.and]: [
+        { room_id: roomId },
+        { check_in_date: { [Op.lt]: reqCheckOutDate } },
+        { check_out_date: { [Op.gt]: reqCheckInDate } },
+      ],
+    },
+  })
+
+  return !booking
 }
