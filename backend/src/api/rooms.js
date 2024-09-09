@@ -8,9 +8,22 @@ router.get('/', async (req, res) => {
   res.json(rooms)
 })
 
-router.post('/', async (req, res) => {
-  const newRoom = await Room.create({ price: 10000, beds: 2 })
-  res.json(newRoom.dataValues)
+router.post('/', async (req, res, next) => {
+  const { name, price, beds, description } = req.body
+
+  if ((!name, !price, !beds)) {
+    res
+      .status(400)
+      .send(
+        'Error: Missing required information. Please verify all required fields and try again.',
+      )
+  }
+  try {
+    const newRoom = await Room.create({ name, price, beds, description })
+    res.json(newRoom.dataValues)
+  } catch (err) {
+    next(err)
+  }
 })
 
 router.put('/:id', (req, res) => {

@@ -5,8 +5,10 @@ class Room extends Model {}
 
 Room.init(
   {
+    name: { type: DataTypes.STRING, allowNull: false },
     price: { type: DataTypes.INTEGER, allowNull: false },
     beds: { type: DataTypes.INTEGER, allowNull: false },
+    description: DataTypes.STRING,
   },
   { sequelize, modelName: 'Room' },
 )

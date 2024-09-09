@@ -14,8 +14,8 @@ app.get('/', (req, res) => {
 })
 
 app.get('/sync', async (req, res) => {
-  // TODO remove this route
-  await sequelize.sync({ force: true })
+  // TODO remove this route after development
+  sequelize.sync({ force: true })
   res.status(204)
 })
 
@@ -24,7 +24,8 @@ app.use('/api/v1/bookings', bookingsRouter)
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  res.status(500).send('☠️☠️☠️ Something went wrong!')
+  console.error(err)
+  res.status(500).send('☠️☠️☠️ Something went wrong! Please try again.')
 })
 
 export default app
