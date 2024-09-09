@@ -10,23 +10,24 @@ Room.init(
     beds: { type: DataTypes.INTEGER, allowNull: false },
     description: DataTypes.STRING,
   },
-  { sequelize, modelName: 'Room' },
+  { sequelize, modelName: 'room' },
 )
 
 class Booking extends Model {}
 
 Booking.init(
   {
-    room_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: { model: Room, key: 'id' },
-    },
     client_email: { type: DataTypes.STRING, allowNull: false },
     check_in_date: { type: DataTypes.DATEONLY, allowNull: false },
     check_out_date: { type: DataTypes.DATEONLY, allowNull: false },
   },
-  { sequelize, modelName: 'Booking' },
+  { sequelize, modelName: 'booking' },
 )
+
+Room.hasMany(Booking, {
+  onDelete: 'RESTRICT',
+  foreignKey: { allowNull: false },
+})
+Booking.belongsTo(Room)
 
 export { Room, Booking }
