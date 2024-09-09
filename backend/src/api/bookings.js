@@ -4,7 +4,7 @@ import {
   checkAvailability,
   getBookingById,
   validRequestDates,
-} from '../utils/helpers.js'
+} from '../services/databaseService.js'
 const router = express.Router()
 
 router.get('/', async (req, res) => {

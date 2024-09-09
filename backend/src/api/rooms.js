@@ -1,6 +1,6 @@
 import express from 'express'
 import { Room } from '../models/schema.js'
-import { getRoomById } from '../utils/helpers.js'
+import { getRoomById } from '../services/databaseService.js'
 
 const router = express.Router()
 
