@@ -1,21 +1,16 @@
 import express from 'express'
+import { Room } from '../models/schema.js'
 
 const router = express.Router()
 
-const mockRooms = [
-  { id: 1, name: 'Room A', availableDates: ['2024-01-01'] },
-  { id: 2, name: 'ROom B', availableDates: ['2024-01-02'] },
-  { id: 3, name: 'Room C', availableDates: ['2024-01-01'] },
-]
-
-router.get('/', (req, res) => {
-  // TODO get rooms
-  res.json(mockRooms)
+router.get('/', async (req, res) => {
+  const rooms = await Room.findAll()
+  res.json(rooms)
 })
 
-router.post('/', (req, res) => {
-  // TODO create room
-  res.send(201)
+router.post('/', async (req, res) => {
+  const newRoom = await Room.create({ price: 10000, beds: 2 })
+  res.json(newRoom.dataValues)
 })
 
 router.put('/:id', (req, res) => {
