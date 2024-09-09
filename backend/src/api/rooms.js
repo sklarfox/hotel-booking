@@ -1,5 +1,6 @@
 import express from 'express'
 import { Room } from '../models/schema.js'
+import { getRoomById } from '../utils/helpers.js'
 
 const router = express.Router()
 
@@ -11,22 +12,20 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   const id = Number(req.params.id)
+  try {
+    const room = await getRoomById(id)
 
-  if (Number.isNaN(id)) {
-    res
-      .status(400)
-      .send('Error: Bad room ID. Please check the room ID and try again.')
-    return
-  }
-  const room = await Room.findByPk(id)
+    if (room === null) {
+      res
+        .status(404)
+        .send('Room not found. Please check the room ID and try again.')
+      return
+    }
 
-  if (room === null) {
-    res
-      .status(404)
-      .send('Room not found. Please check the room ID and try again.')
-    return
+    res.json(room)
+  } catch (error) {
+    res.status(400).send(String(error))
   }
-  res.json(room)
 })
 
 router.post('/', async (req, res, next) => {
@@ -38,6 +37,7 @@ router.post('/', async (req, res, next) => {
       .send(
         'Error: Missing required information. Please verify all required fields and try again.',
       )
+    return
   }
 
   try {
@@ -51,14 +51,13 @@ router.post('/', async (req, res, next) => {
 router.patch('/:id', async (req, res, next) => {
   const id = Number(req.params.id)
 
-  if (Number.isNaN(id)) {
-    res
-      .status(400)
-      .send('Error: Bad room ID. Please check the room ID and try again.')
+  let room
+  try {
+    room = await getRoomById(id)
+  } catch (error) {
+    res.status(400).send(String(error))
     return
   }
-
-  const room = await Room.findByPk(id)
 
   if (room === null) {
     res
