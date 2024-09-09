@@ -12,6 +12,24 @@ router.get('/', async (req, res) => {
   res.json(bookings)
 })
 
+router.get('/:id', async (req, res) => {
+  const id = Number(req.params.id)
+  try {
+    const booking = await getBookingById(id)
+
+    if (booking === null) {
+      res
+        .status(404)
+        .send('Booking not found. Please check the booking ID and try again.')
+      return
+    }
+
+    res.json(booking)
+  } catch (error) {
+    res.status(400).send(String(error))
+  }
+})
+
 router.post('/', async (req, res, next) => {
   const { room_id, client_email, check_in_date, check_out_date } = req.body
 
@@ -71,7 +89,17 @@ router.put('/:id', async (req, res) => {
 })
 
 router.delete('/:id', async (req, res) => {
-  // TODO delete booking
+  const id = Number(req.params.id)
+  let booking
+  try {
+    booking = await getBookingById(id)
+  } catch (error) {
+    res.status(400).send(String(error))
+  }
+
+  if (booking !== null) {
+    booking.destroy()
+  }
   res.send(204)
 })
 
