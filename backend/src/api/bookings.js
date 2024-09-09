@@ -1,6 +1,10 @@
 import express from 'express'
 import { Booking } from '../models/schema.js'
-import { getBookingById } from '../utils/helpers.js'
+import {
+  checkAvailability,
+  getBookingById,
+  validRequestDates,
+} from '../utils/helpers.js'
 const router = express.Router()
 
 router.get('/', async (req, res) => {
@@ -8,7 +12,6 @@ router.get('/', async (req, res) => {
   res.json(bookings)
 })
 
-// TODO validation: date is in future, there isn't an overlapping booking, end date is later than begin date + min 1 day after
 router.post('/', async (req, res, next) => {
   const { room_id, client_email, check_in_date, check_out_date } = req.body
 
@@ -25,20 +28,41 @@ router.post('/', async (req, res, next) => {
         'Validation Error: Missing required information. Please verify all required fields and try again.',
       )
     return
+  } else if (!validRequestDates(check_in_date, check_out_date)) {
+    res
+      .status(400)
+      .send(
+        'Date Error: Invalid dates requested. Please verify the requested dates and try again.',
+      )
+    return
   }
 
-  try {
-    const newBooking = await Booking.create({
-      room_id,
-      client_email,
-      check_in_date,
-      check_out_date,
-    })
-    res.json(newBooking.dataValues)
-  } catch (err) {
-    next(err)
+  const isAvailable = await checkAvailability(
+    room_id,
+    check_in_date,
+    check_out_date,
+  )
+
+  if (isAvailable) {
+    try {
+      const newBooking = await Booking.create({
+        room_id,
+        client_email,
+        check_in_date,
+        check_out_date,
+      })
+      res.json(newBooking.dataValues)
+    } catch (err) {
+      next(err)
+    }
+    res.status(201)
+  } else {
+    res
+      .status(400)
+      .send(
+        'Booking Error: The requested room is no longer available. Please try again with different dates.',
+      )
   }
-  res.status(201)
 })
 
 router.put('/:id', async (req, res) => {

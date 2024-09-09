@@ -41,7 +41,7 @@ export const checkAvailability = async (
   return !booking
 }
 
-export const validateRequestDates = (reqCheckIn, reqCheckOut) => {
+export const validRequestDates = (reqCheckIn, reqCheckOut) => {
   let today = new Date()
   today = new Date(today.getFullYear(), today.getMonth(), today.getDay())
   const checkInDate = new Date(reqCheckIn)
