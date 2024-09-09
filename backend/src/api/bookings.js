@@ -104,14 +104,3 @@ router.delete('/:id', async (req, res) => {
 })
 
 export default router
-
-/*
-POST bookings
-
-When a user makes a request to reserve:
-LATER Verify the room is available (perform a query for bookings of the room that overlap with the date range provided)
-
-Create a new booking entry with the provided params
-Return the booking entry
-
-*/
