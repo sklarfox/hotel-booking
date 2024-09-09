@@ -5,6 +5,7 @@ import { getRoomById } from '../utils/helpers.js'
 const router = express.Router()
 
 router.get('/', async (req, res) => {
+  // TODO add query params to filter / search based off availability
   const rooms = await Room.findAll()
 
   res.json(rooms)
@@ -31,11 +32,11 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res, next) => {
   const { name, price, beds, description } = req.body
 
-  if (!name || !price || !beds) {
+  if (!name || !price || !beds || typeof name !== 'string' || name.length < 1) {
     res
       .status(400)
       .send(
-        'Error: Missing required information. Please verify all required fields and try again.',
+        'Validation Error: Missing required information. Please verify all required fields and try again.',
       )
     return
   }
