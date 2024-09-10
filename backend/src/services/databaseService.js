@@ -31,12 +31,33 @@ export const checkRoomAvailability = async (
   const booking = await Booking.findOne({
     where: {
       [Op.and]: [
-        { room_id: roomId },
-        { check_in_date: { [Op.lt]: reqCheckOutDate } },
-        { check_out_date: { [Op.gt]: reqCheckInDate } },
+        { roomId: roomId },
+        { checkInDate: { [Op.lt]: reqCheckOutDate } },
+        { checkOutDate: { [Op.gt]: reqCheckInDate } },
       ],
     },
   })
 
   return !booking
+}
+
+export const findAvailableRoomsByDateRange = async (
+  reqCheckInDate,
+  reqCheckOutDate,
+) => {
+  const rooms = await Room.findAll({
+    include: {
+      model: Booking,
+      required: false,
+      where: {
+        [Op.and]: [
+          { checkInDate: { [Op.lt]: reqCheckOutDate } },
+          { checkOutDate: { [Op.gt]: reqCheckInDate } },
+        ],
+      },
+    },
+  })
+
+  console.log(rooms)
+  return rooms
 }

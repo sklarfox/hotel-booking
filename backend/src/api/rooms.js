@@ -1,14 +1,26 @@
 import express from 'express'
 import { Room } from '../models/schema.js'
-import { getRoomById } from '../services/databaseService.js'
+import {
+  findAvailableRoomsByDateRange,
+  getRoomById,
+} from '../services/databaseService.js'
 
 const router = express.Router()
 
 router.get('/', async (req, res) => {
-  // TODO add query params to filter / search based off availability
-  const rooms = await Room.findAll()
+  const { check_in_date, check_out_date } = req.query
 
-  res.json(rooms)
+  if (check_in_date && check_out_date) {
+    const rooms = await findAvailableRoomsByDateRange(
+      check_in_date,
+      check_out_date,
+    )
+    console.log('\n', rooms, '\n')
+    res.json(rooms)
+  } else {
+    const rooms = await Room.findAll()
+    res.json(rooms)
+  }
 })
 
 router.get('/:id', async (req, res) => {

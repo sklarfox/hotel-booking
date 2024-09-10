@@ -31,14 +31,14 @@ router.get('/:id', async (req, res) => {
 })
 
 router.post('/', async (req, res, next) => {
-  const { room_id, client_email, check_in_date, check_out_date } = req.body
+  const { roomId, clientEmail, checkInDate, checkOutDate } = req.body
 
   if (
-    !room_id ||
-    !client_email ||
-    !check_in_date ||
-    !check_out_date ||
-    typeof client_email !== 'string'
+    !roomId ||
+    !clientEmail ||
+    !checkInDate ||
+    !checkOutDate ||
+    typeof clientEmail !== 'string'
   ) {
     res
       .status(400)
@@ -46,7 +46,7 @@ router.post('/', async (req, res, next) => {
         'Validation Error: Missing required information. Please verify all required fields and try again.',
       )
     return
-  } else if (!validBookingDates(check_in_date, check_out_date)) {
+  } else if (!validBookingDates(checkInDate, checkOutDate)) {
     res
       .status(400)
       .send(
@@ -56,18 +56,18 @@ router.post('/', async (req, res, next) => {
   }
 
   const isAvailable = await checkRoomAvailability(
-    room_id,
-    check_in_date,
-    check_out_date,
+    roomId,
+    checkInDate,
+    checkOutDate,
   )
 
   if (isAvailable) {
     try {
       const newBooking = await Booking.create({
-        room_id,
-        client_email,
-        check_in_date,
-        check_out_date,
+        roomId,
+        clientEmail,
+        checkInDate,
+        checkOutDate,
       })
       res.json(newBooking.dataValues)
     } catch (err) {

@@ -17,9 +17,9 @@ class Booking extends Model {}
 
 Booking.init(
   {
-    client_email: { type: DataTypes.STRING, allowNull: false },
-    check_in_date: { type: DataTypes.DATEONLY, allowNull: false },
-    check_out_date: { type: DataTypes.DATEONLY, allowNull: false },
+    clientEmail: { type: DataTypes.STRING, allowNull: false },
+    checkInDate: { type: DataTypes.DATEONLY, allowNull: false },
+    checkOutDate: { type: DataTypes.DATEONLY, allowNull: false },
   },
   { sequelize, modelName: 'booking' },
 )
