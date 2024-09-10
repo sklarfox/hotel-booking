@@ -5,9 +5,11 @@ import {
   getBookingById,
 } from '../services/databaseService.js'
 import { validBookingDates } from '../utils/helpers.js'
+import { checkRole } from '../middleware/authorization.js'
+
 const router = express.Router()
 
-router.get('/', async (req, res) => {
+router.get('/', checkRole('admin'), async (req, res) => {
   const bookings = await Booking.findAll()
   res.json(bookings)
 })
@@ -88,7 +90,7 @@ router.put('/:id', async (req, res) => {
   res.send(204)
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', checkRole('admin'), async (req, res) => {
   const id = Number(req.params.id)
   let booking
   try {

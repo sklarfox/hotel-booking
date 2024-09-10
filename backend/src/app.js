@@ -3,11 +3,13 @@ import morgan from 'morgan'
 import roomsRouter from './api/rooms.js'
 import bookingsRouter from './api/bookings.js'
 import sequelize from './config/database.js'
+import { authHandler } from './middleware/authorization.js'
 
 const app = express()
 
 app.use(morgan('dev'))
 app.use(express.json())
+app.use(authHandler)
 
 app.get('/', (req, res) => {
   res.send('hello world')

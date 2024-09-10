@@ -5,6 +5,7 @@ import {
   getRoomById,
 } from '../services/databaseService.js'
 import { validBookingDates } from '../utils/helpers.js'
+import { checkRole } from '../middleware/authorization.js'
 
 const router = express.Router()
 
@@ -42,7 +43,7 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/', checkRole('admin'), async (req, res, next) => {
   const { name, price, beds, description } = req.body
 
   if (!name || !price || !beds || typeof name !== 'string' || name.length < 1) {
@@ -62,7 +63,7 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-router.patch('/:id', async (req, res, next) => {
+router.patch('/:id', checkRole('admin'), async (req, res, next) => {
   const id = Number(req.params.id)
 
   let room
@@ -95,7 +96,7 @@ router.patch('/:id', async (req, res, next) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', checkRole('admin'), async (req, res) => {
   const id = Number(req.params.id)
 
   let room
