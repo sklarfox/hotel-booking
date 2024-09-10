@@ -59,7 +59,5 @@ export const findAvailableRoomsByDateRange = async (
     },
     where: Sequelize.literal('bookings.id IS NULL'),
   })
-
-  console.log(rooms)
   return rooms
 }
