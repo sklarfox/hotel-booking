@@ -1,4 +1,4 @@
-import { Op } from 'sequelize'
+import { Op, Sequelize } from 'sequelize'
 import { Room, Booking } from '../models/schema.js'
 
 export const getRoomById = async id => {
@@ -46,6 +46,7 @@ export const findAvailableRoomsByDateRange = async (
   reqCheckOutDate,
 ) => {
   const rooms = await Room.findAll({
+    attributes: ['id', 'name', 'price'],
     include: {
       model: Booking,
       required: false,
@@ -56,6 +57,7 @@ export const findAvailableRoomsByDateRange = async (
         ],
       },
     },
+    where: Sequelize.literal('bookings.id IS NULL'),
   })
 
   console.log(rooms)
