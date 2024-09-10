@@ -34,6 +34,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id', async (req, res) => {
   const id = Number(req.params.id)
+
   try {
     const room = await getRoomById(id)
 

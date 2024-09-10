@@ -1,7 +1,10 @@
 import request from 'supertest'
 import express from 'express'
 import roomsRouter from '../src/api/rooms.js'
-import { findAvailableRoomsByDateRange } from '../src/services/databaseService.js'
+import {
+  findAvailableRoomsByDateRange,
+  getRoomById,
+} from '../src/services/databaseService.js'
 import { Room } from '../src/models/schema.js'
 import { testRooms, testBookings } from './testData.js'
 
@@ -62,10 +65,34 @@ describe('GET /rooms', () => {
   it('should return a 500 status code if database call fails', async () => {
     Room.findAll.mockRejectedValue(new Error('Database error'))
     const response = await request(app).get('/rooms')
-    console.log('rejecting')
 
     expect(response.status).toBe(500)
     expect(response.body).toEqual({})
     expect(Room.findAll).toHaveBeenCalledTimes(2)
   })
 })
+
+describe('GET /rooms/:id', () => {
+  it('should provide the requested room', async () => {
+    getRoomById.mockResolvedValue(testRooms[0])
+    const response = await request(app).get('/rooms/1')
+    expect(response.status).toBe(200)
+    expect(response.body).toStrictEqual(testRooms[0])
+  })
+
+  it('should provide a 404 status code if the room is not found', async () => {
+    getRoomById.mockResolvedValue(null)
+    const response = await request(app).get('/rooms/425')
+    expect(response.status).toBe(404)
+  })
+
+  it('should provide a 400 status code if the requested room is invalid', async () => {
+    getRoomById.mockRejectedValue(new Error('Validation Error'))
+    const response = await request(app).get('/rooms/asdf')
+    expect(response.status).toBe(400)
+  })
+})
+
+// describe('POST /rooms', () => {
+//   it('should reject operations if not an authorized admin', () => {})
+// })
