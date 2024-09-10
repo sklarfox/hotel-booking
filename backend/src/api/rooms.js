@@ -4,19 +4,20 @@ import {
   findAvailableRoomsByDateRange,
   getRoomById,
 } from '../services/databaseService.js'
+import { validBookingDates } from '../utils/helpers.js'
 
 const router = express.Router()
 
 router.get('/', async (req, res) => {
-  const { check_in_date, check_out_date } = req.query
+  const { checkInDate, checkOutDate } = req.query
 
-  if (check_in_date && check_out_date) {
-    const rooms = await findAvailableRoomsByDateRange(
-      check_in_date,
-      check_out_date,
-    )
-    console.log('\n', rooms, '\n')
+  if (validBookingDates(checkInDate, checkOutDate)) {
+    const rooms = await findAvailableRoomsByDateRange(checkInDate, checkOutDate)
     res.json(rooms)
+  } else if (checkInDate || checkOutDate) {
+    res
+      .status(400)
+      .send('Validation Error: Please check the requested booking dates.')
   } else {
     const rooms = await Room.findAll()
     res.json(rooms)
