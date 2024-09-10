@@ -9,19 +9,26 @@ import { checkRole } from '../middleware/authorization.js'
 
 const router = express.Router()
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   const { checkInDate, checkOutDate } = req.query
 
-  if (validBookingDates(checkInDate, checkOutDate)) {
-    const rooms = await findAvailableRoomsByDateRange(checkInDate, checkOutDate)
-    res.json(rooms)
-  } else if (checkInDate || checkOutDate) {
-    res
-      .status(400)
-      .send('Validation Error: Please check the requested booking dates.')
-  } else {
-    const rooms = await Room.findAll()
-    res.json(rooms)
+  try {
+    if (validBookingDates(checkInDate, checkOutDate)) {
+      const rooms = await findAvailableRoomsByDateRange(
+        checkInDate,
+        checkOutDate,
+      )
+      res.json(rooms)
+    } else if (checkInDate || checkOutDate) {
+      res
+        .status(400)
+        .send('Validation Error: Please check the requested booking dates.')
+    } else {
+      const rooms = await Room.findAll()
+      res.json(rooms)
+    }
+  } catch (error) {
+    next(error)
   }
 })
 
