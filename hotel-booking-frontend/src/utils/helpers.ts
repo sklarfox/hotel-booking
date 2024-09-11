@@ -18,3 +18,10 @@ export const getDateAlert = (checkInDate: Date, checkOutDate: Date) => {
   }
   return ''
 }
+
+export function getNumberOfNights(checkIn: Date, checkOut: Date): number {
+  const oneDay = 24 * 60 * 60 * 1000 // milliseconds in one day
+  const diffInTime = checkOut.getTime() - checkIn.getTime()
+  const diffInDays = diffInTime / oneDay
+  return Math.round(diffInDays)
+}
