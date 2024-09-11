@@ -78,7 +78,7 @@ router.patch('/:id', checkRole('admin'), async (req, res, next) => {
   try {
     room = await getRoomById(id)
   } catch (error) {
-    res.status(400).send(String(error))
+    res.status(500).send(String(error))
     return
   }
 
@@ -110,14 +110,14 @@ router.delete('/:id', checkRole('admin'), async (req, res) => {
   let room
   try {
     room = await getRoomById(id)
+    if (room !== null) {
+      room.destroy()
+    }
   } catch (error) {
-    res.status(400).send(String(error))
+    return res.status(500).send(String(error))
   }
 
-  if (room !== null) {
-    room.destroy()
-  }
-  res.send(204)
+  res.sendStatus(204)
 })
 
 export default router

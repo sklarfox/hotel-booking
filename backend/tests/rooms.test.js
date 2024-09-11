@@ -129,27 +129,70 @@ describe('POST /rooms', () => {
     expect(response.status).toBe(400)
   })
 
-  describe('PATCH /rooms', () => {
-    it('should update the room and return the new data', async () => {
-      const response = await request(app)
-        .patch('/rooms/1')
-        .send({ price: 10999 })
-      expect(response.status).toBe(200)
-    })
+  it('should return a 500 status code if database call fails', async () => {
+    Room.create.mockRejectedValue(new Error('Database error'))
+    const response = await request(app).post('/rooms').send(testRooms[0])
+    expect(response.status).toBe(500)
+    expect(response.body).toEqual({})
+    expect(Room.findAll).toHaveBeenCalledTimes(2)
+  })
+})
 
-    it('should provide a 404 error if the room does not exist', async () => {
-      getRoomById.mockResolvedValue(null)
-      const response = await request(app)
-        .patch('/rooms/9999')
-        .send({ price: 10999 })
-      expect(response.status).toBe(404)
-    })
+describe('PATCH /rooms/:id', () => {
+  it('should update the room and return the new data', async () => {
+    const response = await request(app)
+      .patch('/rooms/1')
+      .send({ name: 'A New Room Name' })
+    expect(response.status).toBe(200)
   })
 
-  describe('DELETE /rooms/:id', () => {
-    it('should provide a 204 response code', async () => {
-      const response = await request(app).delete('/rooms/1')
-      expect(response.status).toBe(204)
-    })
+  it('should provide a 404 error if the room does not exist', async () => {
+    getRoomById.mockResolvedValue(null)
+    const response = await request(app)
+      .patch('/rooms/9999')
+      .send({ price: 10999 })
+    expect(response.status).toBe(404)
+  })
+
+  it('should provide a 500 error code on database retrieval error', async () => {
+    getRoomById.mockRejectedValue(new Error('Database Error'))
+    const response = await request(app).patch('/rooms/1').send({ price: 10099 })
+    expect(response.status).toBe(500)
+  })
+
+  it('should provide a 500 error code on database save error', async () => {
+    const failingRoom = {
+      save: () => {
+        throw new Error('Database Error')
+      },
+    }
+    getRoomById.mockResolvedValue(failingRoom)
+    const response = await request(app).patch('/rooms/1').send({ price: 10099 })
+    expect(response.status).toBe(500)
+  })
+})
+
+describe('DELETE /rooms/:id', () => {
+  it('should provide a 204 response code', async () => {
+    const response = await request(app).delete('/rooms/1')
+    expect(response.status).toBe(204)
+  })
+
+  it('should provide a 204 response code even if no room is found', async () => {
+    getRoomById.mockResolvedValue(null)
+    const response = await request(app).delete('/rooms/999')
+    expect(response.status).toBe(204)
+  })
+
+  it('should provide a 500 error on database error', async () => {
+    const failingRoom = {
+      destroy: () => {
+        throw new Error('Database Error')
+      },
+    }
+
+    getRoomById.mockRejectedValue(failingRoom)
+    const response = await request(app).delete('/rooms/1')
+    expect(response.status).toBe(500)
   })
 })
