@@ -10,11 +10,12 @@ export interface Room {
 
 interface RoomCardProps {
   room: Room
+  onBookingClick: (id: number) => void
 }
 
-const RoomCard = ({ room }: RoomCardProps) => {
+const RoomCard = ({ room, onBookingClick }: RoomCardProps) => {
   const handleBookRoom = () => {
-    'booking a rooms!'
+    onBookingClick(room.id)
   }
 
   return (
@@ -46,14 +47,18 @@ const RoomCard = ({ room }: RoomCardProps) => {
 
 interface CardGridProps {
   rooms: Room[]
-  // setBookingData: React.Dispatch<React.SetStateAction<Room | undefined>>
+  onBookingClick: (id: number) => void
 }
 
-export const CardGrid = ({ rooms }: CardGridProps) => {
+export const CardGrid = ({ rooms, onBookingClick }: CardGridProps) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
       {rooms.map(room => (
-        <RoomCard key={room.id} room={room}></RoomCard>
+        <RoomCard
+          key={room.id}
+          room={room}
+          onBookingClick={onBookingClick}
+        ></RoomCard>
       ))}
     </div>
   )

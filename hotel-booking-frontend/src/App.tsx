@@ -25,6 +25,10 @@ function App() {
       .then(data => setRooms(data))
       .catch(error => console.error('Error fetching rooms:', error))
   }, [])
+
+  const handleBookingClick = (id: number) => {
+    console.log('Booking room with id:', id, checkIn, checkOut)
+  }
   return (
     <>
       <Header></Header>
@@ -40,7 +44,7 @@ function App() {
         />
       </span>
       <main className="flex min-h-screen items-center justify-center gap-2 dark:bg-gray-800">
-        <CardGrid rooms={rooms}></CardGrid>
+        <CardGrid rooms={rooms} onBookingClick={handleBookingClick}></CardGrid>
       </main>
     </>
   )
