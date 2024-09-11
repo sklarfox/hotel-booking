@@ -9,6 +9,7 @@ import {
 import { Booking } from '../src/models/schema.js'
 import { testRooms, testBookings } from './testData.js'
 import { getBookingById } from '../src/services/databaseService.js'
+import e from 'express'
 
 jest.mock('../src/services/databaseService.js')
 jest.mock('../src/models/schema.js')
@@ -84,28 +85,75 @@ describe('POST /bookings', () => {
     })
   })
 
-  it('should reject a booking if there are any missing fields in the request', async () => {})
+  it('should reject a booking if there are any missing fields in the request', async () => {
+    const invalidBooking = {
+      roomId: 1,
+      clientEmail: 'hello@hello.hello',
+      checkInDate: '2024-11-05',
+    }
 
-  it('should reject a booking if the requested room does not exist', async () => {})
+    const response = await request(app).post('/bookings').send(invalidBooking)
 
-  it('should reject a booking if the requested room is not available', async () => {})
+    expect(response.status).toBe(400)
+  })
 
-  it('should reject a booking if the requested dates are invalid', async () => {})
+  it('should reject a booking if the requested room does not exist', async () => {
+    const newBooking = {
+      roomId: 999,
+      clientEmail: 'hello@hello.hello',
+      checkInDate: '2024-11-05',
+      checkOutDate: '2024-11-06',
+    }
+
+    checkRoomAvailability.mockResolvedValue(false)
+
+    const response = await request(app).post('/bookings').send(newBooking)
+
+    expect(response.status).toBe(400)
+  })
+
+  it('should reject a booking if the requested room is not available', async () => {
+    const newBooking = {
+      roomId: 999,
+      clientEmail: 'hello@hello.hello',
+      checkInDate: '2024-11-05',
+      checkOutDate: '2024-11-06',
+    }
+
+    checkRoomAvailability.mockResolvedValue(false)
+
+    const response = await request(app).post('/bookings').send(newBooking)
+
+    expect(response.status).toBe(400)
+  })
+
+  it('should reject a booking if the requested dates are invalid', async () => {
+    const newBooking = {
+      roomId: 1,
+      clientEmail: 'hello@hello.hello',
+      checkInDate: '2024-11-06',
+      checkOutDate: '2024-11-05',
+    }
+
+    const response = await request(app).post('/bookings').send(newBooking)
+
+    expect(response.status).toBe(400)
+  })
 })
 
-// describe('PATCH /bookings/:id', () => {
-//   it('should accept a valid change request', async () => {
-//     expect(true).toBe(false)
-//   })
+describe('PATCH /bookings/:id', () => {
+  it('should accept a valid change request', async () => {
+    expect(true).toBe(false)
+  })
 
-//   it('should reject a change request where the new dates are unavailable', () => {
-//     expect(true).toBe(false)
-//   })
+  it('should reject a change request where the new dates are unavailable', () => {
+    expect(true).toBe(false)
+  })
 
-//   it('should provide a 404 status if the requested booking is not found', () => {
-//     expect(true).toBe(false)
-//   })
-// })
+  it('should provide a 404 status if the requested booking is not found', () => {
+    expect(true).toBe(false)
+  })
+})
 
 // describe('DELETE /bookings/:id', () => {
 //   it('should successfully delete a valid booking', () => {
