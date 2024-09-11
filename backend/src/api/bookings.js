@@ -28,7 +28,7 @@ router.get('/:id', async (req, res) => {
 
     res.json(booking)
   } catch (error) {
-    res.status(400).send(String(error))
+    res.status(500).send(String(error))
   }
 })
 
@@ -71,11 +71,10 @@ router.post('/', async (req, res, next) => {
         checkInDate,
         checkOutDate,
       })
-      res.json(newBooking.dataValues)
+      res.status(201).json(newBooking.dataValues)
     } catch (err) {
       next(err)
     }
-    res.status(201)
   } else {
     res
       .status(400)
@@ -85,7 +84,7 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-router.put('/:id', async (req, res) => {
+router.patch('/:id', async (req, res) => {
   // TODO update booking
   res.send(204)
 })
