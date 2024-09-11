@@ -85,8 +85,46 @@ router.post('/', async (req, res, next) => {
 })
 
 router.patch('/:id', async (req, res) => {
-  // TODO update booking
-  res.send(204)
+  // TODO Implement authorization check: admin or matching username
+  const id = Number(req.params.id)
+
+  let booking
+  try {
+    booking = await getBookingById(id)
+  } catch (error) {
+    return res.status(500).send(String(error))
+  }
+
+  if (booking === null) {
+    return res
+      .status(404)
+      .send('Booking not found. Please check the booking ID and try again.')
+  }
+
+  const { checkInDate, checkOutDate } = req.body
+
+  const isAvailable = await checkRoomAvailability(
+    booking.roomId,
+    checkInDate,
+    checkOutDate,
+  )
+
+  if (isAvailable) {
+    try {
+      booking.checkInDate = checkInDate || booking.checkInDate
+      booking.checkOutDate = checkOutDate || booking.checkOutDate
+      await booking.save()
+      return res.json(booking)
+    } catch (error) {
+      return res.status(500).send(String(error))
+    }
+  } else {
+    res
+      .status(400)
+      .send(
+        'Booking Error: The requested room is no longer available. Please try again with different dates.',
+      )
+  }
 })
 
 router.delete('/:id', checkRole('admin'), async (req, res) => {
