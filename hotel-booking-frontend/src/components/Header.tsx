@@ -1,4 +1,4 @@
-import { Navbar, Button, DarkThemeToggle } from 'flowbite-react'
+import { Navbar, DarkThemeToggle } from 'flowbite-react'
 
 export const Header = () => {
   return (
@@ -14,7 +14,6 @@ export const Header = () => {
         </span>
       </Navbar.Brand>
       <div className="flex md:order-2">
-        <Button className="mr-2">Book Now</Button>
         <DarkThemeToggle />
       </div>
     </Navbar>

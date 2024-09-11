@@ -1,42 +1,54 @@
-'use client'
-
 import { useState, useEffect } from 'react'
 import { CardGrid, Room } from './components/CardGrid'
 import { Header } from './components/Header'
-import { getTomorrow } from './utils/helpers'
+import { DateSelector } from './components/DateSelector'
 
-import { Datepicker, Button } from 'flowbite-react'
+import { Alert, Modal, Label, Button } from 'flowbite-react'
 
-const DateSelector = () => {
-  const [selectedCheckInDate, setSelectedCheckInDate] = useState(new Date())
-  const [selectedCheckOutDate, setSelectedCheckOutDate] = useState(new Date())
-
-  const handleDateSearch = async () => {
-    console.log(
-      'searching!',
-      selectedCheckInDate.toDateString(),
-      selectedCheckOutDate.toDateString(),
-    )
-  }
-
-  const handleCheckOutDateChange = (newDate: Date) => {
-    setSelectedCheckOutDate(newDate)
-  }
-
-  const handleCheckInDateChange = (newDate: Date) => {
-    setSelectedCheckInDate(newDate)
-  }
+const AlertBar = ({ alert }: { alert: string }) => {
   return (
-    <div className="flex justify-center space-x-4">
-      <Datepicker onSelectedDateChanged={handleCheckInDateChange}></Datepicker>
-      <Datepicker onSelectedDateChanged={handleCheckOutDateChange}></Datepicker>
-      <Button onClick={handleDateSearch}>Search</Button>
-    </div>
+    <Alert color="warning" rounded>
+      <span className="font-medium">Alert!</span> {alert}
+    </Alert>
+  )
+}
+
+interface BookingData {
+  userEmail: string
+  checkInDate: Date
+  checkOutDate: Date
+  room: Room
+}
+
+interface BookingModalProps {
+  show: boolean
+  bookingData: BookingData
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const BookingModal = ({ show, room, setOpenModal }: BookingModalProps) => {
+  if (!room) return null
+  return (
+    <Modal dismissible show={show} onClose={() => setOpenModal(false)}>
+      <Modal.Header>
+        <Modal.Body>
+          <div className="content-center space-y-6">
+            <h3 className="text-xl font-semibold">Reserve A Room</h3>
+            <h4>{room.name}</h4>
+          </div>
+        </Modal.Body>
+      </Modal.Header>
+    </Modal>
   )
 }
 
 function App() {
   const [rooms, setRooms] = useState<Room[]>([])
+  const [alert, setAlert] = useState('')
+  const [checkIn, setCheckIn] = useState<Date>(new Date())
+  const [checkOut, setCheckOut] = useState<Date>(new Date())
+  const [bookingData, setBookingData] = useState<BookingData>({})
+  const [openModal, setOpenModal] = useState(true)
 
   useEffect(() => {
     fetch(import.meta.env.VITE_API_URL + 'rooms')
@@ -47,11 +59,20 @@ function App() {
   return (
     <>
       <Header></Header>
+      <BookingModal show={openModal} setOpenModal={setOpenModal}></BookingModal>
+      {alert && <AlertBar alert={alert}></AlertBar>}
       <span className="flex justify-center bg-gray-300 p-8 dark:bg-gray-900">
-        <DateSelector />
+        <DateSelector
+          setRooms={setRooms}
+          setAlert={setAlert}
+          checkIn={checkIn}
+          setCheckIn={setCheckIn}
+          checkOut={checkOut}
+          setCheckOut={setCheckOut}
+        />
       </span>
       <main className="flex min-h-screen items-center justify-center gap-2 dark:bg-gray-800">
-        <CardGrid rooms={rooms}></CardGrid>
+        <CardGrid rooms={rooms} setBookingData={setBookingData}></CardGrid>
       </main>
     </>
   )
