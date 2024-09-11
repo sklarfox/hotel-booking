@@ -28,4 +28,32 @@ export const testRooms = [
   },
 ]
 
-export const testBookings = []
+export const testBookings = [
+  {
+    id: 1,
+    clientEmail: 'johnny.utah@point.break',
+    checkInDate: '2024-10-01',
+    checkOutDate: '2024-10-03',
+    createdAt: '2024-09-10T01:30:06.785Z',
+    updatedAt: '2024-09-10T01:30:06.785Z',
+    roomId: 1,
+  },
+  {
+    id: 2,
+    clientEmail: 'hello@hello.hello',
+    checkInDate: '2024-10-05',
+    checkOutDate: '2024-10-06',
+    createdAt: '2024-09-10T01:40:28.211Z',
+    updatedAt: '2024-09-10T01:40:28.211Z',
+    roomId: 1,
+  },
+  {
+    id: 3,
+    clientEmail: 'user@user.com',
+    checkInDate: '2024-10-05',
+    checkOutDate: '2024-10-06',
+    createdAt: '2024-09-10T01:40:28.211Z',
+    updatedAt: '2024-09-10T01:40:28.211Z',
+    roomId: 2,
+  },
+]
