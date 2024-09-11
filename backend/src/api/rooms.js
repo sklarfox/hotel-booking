@@ -65,7 +65,7 @@ router.post('/', checkRole('admin'), async (req, res, next) => {
 
   try {
     const newRoom = await Room.create({ name, price, beds, description })
-    res.json(newRoom.dataValues)
+    res.status(201).json(newRoom.dataValues)
   } catch (err) {
     next(err)
   }
