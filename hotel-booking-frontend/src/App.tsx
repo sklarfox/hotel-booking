@@ -23,10 +23,10 @@ function Header() {
 }
 
 function App() {
-  const [rooms, setRooms] = useState([])
+  const [rooms, setRooms] = useState(['room1', 'room2'])
 
   useEffect(() => {
-    fetch('https://localhost:3000/api/v1/rooms')
+    fetch(import.meta.env.VITE_API_URL + 'rooms')
       .then((response) => response.json())
       .then((data) => setRooms(data))
       .catch((error) => console.error('Error fetching rooms:', error))
@@ -34,6 +34,7 @@ function App() {
   return (
     <>
       <Header></Header>
+      {rooms}
     </>
   )
 }
