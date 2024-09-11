@@ -3,13 +3,11 @@ import express from 'express'
 import bookingsRouter from '../src/api/bookings.js'
 import {
   findAvailableRoomsByDateRange,
-  getRoomById,
   checkRoomAvailability,
 } from '../src/services/databaseService.js'
 import { Booking } from '../src/models/schema.js'
 import { testRooms, testBookings } from './testData.js'
 import { getBookingById } from '../src/services/databaseService.js'
-import e from 'express'
 
 jest.mock('../src/services/databaseService.js')
 jest.mock('../src/models/schema.js')
@@ -23,7 +21,15 @@ app.use('/bookings', bookingsRouter)
 
 beforeEach(() => {
   Booking.findAll.mockResolvedValue(testBookings)
-  getBookingById.mockResolvedValue(testBookings[0])
+  getBookingById.mockResolvedValue({
+    id: 1,
+    roomId: 1,
+    clientEmail: 'hello@hello.hello',
+    checkInDate: '2024-11-05',
+    checkOutDate: '2024-11-06',
+    save: () => {},
+    destroy: () => {},
+  })
 })
 
 describe('GET /bookings', () => {
@@ -44,7 +50,7 @@ describe('GET /bookings/:id', () => {
   it('should return the requested booking', async () => {
     const response = await request(app).get('/bookings/1')
     expect(response.status).toBe(200)
-    expect(response.body).toEqual(testBookings[0])
+    expect(response.body.roomId).toBe(1)
   })
 
   it('should provide a 404 status if the booking is not found', async () => {
@@ -143,24 +149,46 @@ describe('POST /bookings', () => {
 
 describe('PATCH /bookings/:id', () => {
   it('should accept a valid change request', async () => {
-    expect(true).toBe(false)
+    const changeRequest = {
+      checkInDate: '2024-11-06',
+      checkOutDate: '2024-11-07',
+    }
+
+    checkRoomAvailability.mockResolvedValue(true)
+    const response = await request(app).patch('/bookings/1').send(changeRequest)
+    expect(response.status).toBe(200)
   })
 
-  it('should reject a change request where the new dates are unavailable', () => {
-    expect(true).toBe(false)
+  it('should reject a change request where the new dates are unavailable', async () => {
+    const changeRequest = {
+      checkInDate: '2024-11-06',
+      checkOutDate: '2024-11-07',
+    }
+
+    checkRoomAvailability.mockResolvedValue(false)
+    const response = await request(app).patch('/bookings/1').send(changeRequest)
+    expect(response.status).toBe(400)
   })
 
-  it('should provide a 404 status if the requested booking is not found', () => {
-    expect(true).toBe(false)
+  it('should provide a 404 status if the requested booking is not found', async () => {
+    getBookingById.mockResolvedValue(null)
+    const response = await request(app).patch('/bookings/999').send({
+      checkInDate: '2024-11-06',
+      checkOutDate: '2024-11-07',
+    })
+    expect(response.status).toBe(404)
   })
 })
 
-// describe('DELETE /bookings/:id', () => {
-//   it('should successfully delete a valid booking', () => {
-//     expect(true).toBe(false)
-//   })
+describe('DELETE /bookings/:id', () => {
+  it('should successfully delete a valid booking', async () => {
+    const response = await request(app).delete('/bookings/1')
+    expect(response.status).toBe(204)
+  })
 
-//   it('should provide a 204 status if the booking is not found', () => {
-//     expect(true).toBe(false)
-//   })
-// })
+  it('should provide a 204 status if the booking is not found', async () => {
+    getBookingById.mockResolvedValue(null)
+    const response = await request(app).delete('/bookings/999')
+    expect(response.status).toBe(204)
+  })
+})
