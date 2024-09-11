@@ -6,8 +6,7 @@ import {
   getRoomById,
 } from '../src/services/databaseService.js'
 import { Room } from '../src/models/schema.js'
-import { testRooms, testBookings } from './testData.js'
-import { checkRole } from '../src/middleware/authorization.js'
+import { testRooms } from './testData.js'
 
 jest.mock('../src/services/databaseService.js')
 jest.mock('../src/models/schema.js')
