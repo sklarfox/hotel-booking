@@ -1,25 +1,22 @@
-import { DarkThemeToggle, Navbar } from "flowbite-react";
-import { Datepicker } from "flowbite-react";
+import { DarkThemeToggle, Navbar, Button } from "flowbite-react";
 
-function Component() {
+function Header() {
   return (
     <Navbar fluid rounded>
       <Navbar.Brand href="">
-        <img src="/hotel.svg" className="mr-3 h-6 sm:h-9" alt="Hotel Logo" />
+        <img
+          src="/hotel-icon.svg"
+          className="mr-3 h-6 sm:h-9"
+          alt="Hotel Logo"
+        />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
           Hotel Booking
         </span>
       </Navbar.Brand>
-      <Navbar.Toggle />
-      <Navbar.Collapse>
-        <Navbar.Link href="#" active>
-          Home
-        </Navbar.Link>
-        <Navbar.Link href="#">About</Navbar.Link>
-        <Navbar.Link href="#">Services</Navbar.Link>
-        <Navbar.Link href="#">Pricing</Navbar.Link>
-        <Navbar.Link href="#">Contact</Navbar.Link>
-      </Navbar.Collapse>
+      <div className="flex md:order-2">
+        <Button className="mr-2">Book Now</Button>
+        <DarkThemeToggle />
+      </div>
     </Navbar>
   );
 }
@@ -27,12 +24,7 @@ function Component() {
 function App() {
   return (
     <>
-      <Component />
-      <main className="flex min-h-screen items-center justify-center gap-2 dark:bg-gray-800">
-        <h1 className="text-2xl dark:text-white">Hotel Booking</h1>
-        <Datepicker />
-        <DarkThemeToggle />
-      </main>
+      <Header></Header>
     </>
   );
 }
