@@ -1,4 +1,5 @@
-import { DarkThemeToggle, Navbar, Button } from "flowbite-react";
+import { DarkThemeToggle, Navbar, Button } from 'flowbite-react'
+import { useEffect, useState } from 'react'
 
 function Header() {
   return (
@@ -18,15 +19,23 @@ function Header() {
         <DarkThemeToggle />
       </div>
     </Navbar>
-  );
+  )
 }
 
 function App() {
+  const [rooms, setRooms] = useState([])
+
+  useEffect(() => {
+    fetch('https://localhost:3000/api/v1/rooms')
+      .then((response) => response.json())
+      .then((data) => setRooms(data))
+      .catch((error) => console.error('Error fetching rooms:', error))
+  }, [])
   return (
     <>
       <Header></Header>
     </>
-  );
+  )
 }
 
-export default App;
+export default App
