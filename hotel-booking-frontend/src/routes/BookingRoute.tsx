@@ -6,16 +6,24 @@ import { getTomorrow } from '../utils/helpers'
 import { BookingModal } from '../components/Modal'
 import { CardGrid } from '../components/CardGrid'
 
-const BookingRoute = () => {
+interface BookingRouteProps {
+  user: string | null
+  setAlert: React.Dispatch<React.SetStateAction<string>>
+}
+
+const BookingRoute = ({ user, setAlert }: BookingRouteProps) => {
   const [rooms, setRooms] = useState<Room[]>([])
-  const [alert, setAlert] = useState('')
   const [checkIn, setCheckIn] = useState<Date>(new Date())
   const [checkOut, setCheckOut] = useState<Date>(getTomorrow(new Date()))
   const [showModal, setShowModal] = useState(false)
   const [selectedRoom, setSelectedRoom] = useState<Room | undefined>(undefined)
 
   useEffect(() => {
-    fetch(import.meta.env.VITE_API_URL + 'rooms')
+    fetch(import.meta.env.VITE_API_URL + 'rooms', {
+      headers: {
+        Authorization: `Basic ${user}`,
+      },
+    })
       .then(response => response.json())
       .then(data => setRooms(data))
       .catch(error => console.error('Error fetching rooms:', error))
@@ -37,7 +45,6 @@ const BookingRoute = () => {
         setAlert={setAlert}
         setRooms={setRooms}
       ></BookingModal>
-      {alert && <AlertBar alert={alert}></AlertBar>}
       <span className="flex justify-center bg-gray-300 p-8 dark:bg-gray-900">
         <DateSelector
           setRooms={setRooms}

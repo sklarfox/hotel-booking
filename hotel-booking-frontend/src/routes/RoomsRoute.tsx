@@ -93,9 +93,13 @@ const RoomForm = () => {
   )
 }
 
-const RoomsRoute = () => {
+const RoomsRoute = ({ user }: { user: string | null }) => {
   useEffect(() => {
-    fetch(import.meta.env.VITE_API_URL + 'rooms')
+    fetch(import.meta.env.VITE_API_URL + 'rooms', {
+      headers: {
+        Authorization: `Basic ${user}`,
+      },
+    })
       .then(res => res.json())
       .then(data => setRooms(data))
       .catch(error => console.error('Error fetching rooms:', error))

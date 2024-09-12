@@ -1,5 +1,5 @@
-const RoomsRoute = () => {
+const BookingsRoute = ({ user }: { user: string | null }) => {
   return <div>Bookings</div>
 }
 
-export default RoomsRoute
+export default BookingsRoute

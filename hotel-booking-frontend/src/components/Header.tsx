@@ -1,7 +1,8 @@
 import { Navbar, DarkThemeToggle } from 'flowbite-react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, Link, useNavigate } from 'react-router-dom'
 
 export default () => {
+  const navigate = useNavigate()
   const location = useLocation()
   const currentPath = location.pathname
 
@@ -19,13 +20,25 @@ export default () => {
       </Navbar.Brand>
       <Navbar.Toggle />
       <Navbar.Collapse>
-        <Navbar.Link href="/book" active={currentPath === '/'}>
+        <Navbar.Link
+          onClick={() => navigate('/book')}
+          active={currentPath === '/'}
+          className="cursor-pointer"
+        >
           Book A Room
         </Navbar.Link>
-        <Navbar.Link href="/bookings" active={currentPath === '/bookings'}>
+        <Navbar.Link
+          onClick={() => navigate('/bookings')}
+          active={currentPath === '/bookings'}
+          className="cursor-pointer"
+        >
           Bookings
         </Navbar.Link>
-        <Navbar.Link href="/rooms" active={currentPath === '/rooms'}>
+        <Navbar.Link
+          onClick={() => navigate('/rooms')}
+          active={currentPath === '/rooms'}
+          className="cursor-pointer"
+        >
           Rooms
         </Navbar.Link>
       </Navbar.Collapse>
