@@ -21,7 +21,7 @@ const RoomsRoute = ({ user, setAlert }: RoomsRouteProps) => {
   }, [])
 
   const [rooms, setRooms] = useState<Room[]>([])
-  const [showForm, setShowForm] = useState(false)
+  const [showForm, setShowForm] = useState<boolean | number>(0)
 
   return (
     <main className="flex min-h-screen justify-center gap-2 p-10 dark:bg-gray-600">
@@ -43,6 +43,8 @@ const RoomsRoute = ({ user, setAlert }: RoomsRouteProps) => {
                 room={room}
                 user={user}
                 setRooms={setRooms}
+                setAlert={setAlert}
+                setShowForm={setShowForm}
               />
             ))}
           </Table.Body>
@@ -54,6 +56,7 @@ const RoomsRoute = ({ user, setAlert }: RoomsRouteProps) => {
               user={user}
               setRooms={setRooms}
               setAlert={setAlert}
+              room={rooms.find(r => r.id === showForm)}
             />
           ) : (
             <Button onClick={() => setShowForm(true)}>Add a new room</Button>

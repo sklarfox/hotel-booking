@@ -5,15 +5,17 @@ import { Room } from './CardGrid'
 interface RoomRowProps {
   room: Room
   user: string | null
+  setShowForm: (showForm: number | boolean) => void
   setAlert: React.Dispatch<React.SetStateAction<string>>
   setRooms: React.Dispatch<React.SetStateAction<Room[]>>
 }
 
 interface RoomFormProps {
   user: string | null
-  setShowForm: (showForm: boolean) => void
+  setShowForm: (showForm: number | boolean) => void
   setRooms: React.Dispatch<React.SetStateAction<Room[]>>
   setAlert: React.Dispatch<React.SetStateAction<string>>
+  room?: Room | null
 }
 
 export const RoomForm = ({
@@ -21,6 +23,7 @@ export const RoomForm = ({
   setRooms,
   setAlert,
   user,
+  room,
 }: RoomFormProps) => {
   const [name, setName] = useState('')
   const [beds, setBeds] = useState('')
@@ -63,6 +66,41 @@ export const RoomForm = ({
       })
   }
 
+  const handleEditSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const formData = {
+      name,
+      beds: Number(beds),
+      price: Number(price) * 100,
+      description,
+    }
+
+    fetch(import.meta.env.VITE_API_URL + 'rooms/' + room?.id, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${user}`,
+      },
+      body: JSON.stringify(formData),
+    })
+      .then(res => res.json())
+      .then(data => {
+        setRooms(prev => {
+          return prev.map(prevRoom =>
+            prevRoom.id === data.id ? data : prevRoom,
+          )
+        })
+        setName('')
+        setBeds('')
+        setPrice('')
+        setShowForm(false)
+      })
+      .catch(error => {
+        console.error('Error creating room:', error)
+        setAlert('Error creating room, please try again.')
+      })
+  }
+
   const handleCancelClick = () => {
     setName('')
     setBeds('')
@@ -71,18 +109,24 @@ export const RoomForm = ({
   }
 
   return (
-    <form className="flex flex-col gap-2" onSubmit={handleRoomSubmit}>
+    <form
+      className="flex flex-col gap-2"
+      onSubmit={room ? handleEditSubmit : handleRoomSubmit}
+    >
       <div>
+        <span className="text-lg font-bold dark:text-white">
+          {room ? 'Edit Room' : 'Add a New Room'}
+        </span>
         <div className="mb-2 block">
           <Label htmlFor="name" value="Room Name" />
         </div>
         <TextInput
           id="name"
           type="text"
-          placeholder=""
+          placeholder={`${room ? room.name : 'Room Name'}`}
           value={name}
           onChange={e => setName(e.target.value)}
-          required
+          required={!room}
         />
       </div>
       <div>
@@ -92,9 +136,10 @@ export const RoomForm = ({
         <TextInput
           id="beds"
           type="text"
+          placeholder={room?.beds.toString() || ''}
           value={beds}
           onChange={e => setBeds(e.target.value)}
-          required
+          required={!room}
         />
       </div>
       <div>
@@ -105,9 +150,9 @@ export const RoomForm = ({
           id="price"
           type="text"
           value={price}
-          placeholder="$"
+          placeholder={room ? `$${room.price / 100}` : 'Price'}
           onChange={e => setPrice(e.target.value)}
-          required
+          required={!room}
         />
         <div className="mb-2 block">
           <Label htmlFor="description" value="Description (optional)" />
@@ -116,7 +161,7 @@ export const RoomForm = ({
           id="description"
           type="textarea"
           value={description}
-          placeholder="Description"
+          placeholder={room?.description || 'Description'}
           onChange={e => setDescription(e.target.value)}
         />
       </div>
@@ -128,7 +173,13 @@ export const RoomForm = ({
   )
 }
 
-export const RoomRow = ({ room, user, setAlert, setRooms }: RoomRowProps) => {
+export const RoomRow = ({
+  room,
+  user,
+  setAlert,
+  setRooms,
+  setShowForm,
+}: RoomRowProps) => {
   const handleDeleteClick = (id: Number) => {
     fetch(import.meta.env.VITE_API_URL + 'rooms/' + id, {
       method: 'DELETE',
@@ -140,13 +191,19 @@ export const RoomRow = ({ room, user, setAlert, setRooms }: RoomRowProps) => {
         if (res.ok) {
           setRooms(prev => prev.filter(r => r.id !== room.id))
         } else {
-          setAlert('Error deleting room, please try again.')
+          setAlert(
+            'Error deleting room, please try again. Make sure the room has no bookings related to it before deleting.',
+          )
         }
       })
       .catch(error => {
         console.error('Error creating room:', error)
         setAlert('Error deleting room, please try again.')
       })
+  }
+
+  const handleEditClick = () => {
+    setShowForm(room.id)
   }
 
   return (
@@ -157,7 +214,9 @@ export const RoomRow = ({ room, user, setAlert, setRooms }: RoomRowProps) => {
       <Table.Cell>${room.price / 100}</Table.Cell>
       <Table.Cell>
         <div className="flex justify-end space-x-2">
-          <Button size="small">Edit</Button>
+          <Button size="small" onClick={() => handleEditClick()}>
+            Edit
+          </Button>
           <Button size="small" onClick={() => handleDeleteClick(room.id)}>
             Delete
           </Button>
