@@ -19,7 +19,7 @@ export default () => {
       </Navbar.Brand>
       <Navbar.Toggle />
       <Navbar.Collapse>
-        <Navbar.Link href="/" active={currentPath === '/'}>
+        <Navbar.Link href="/book" active={currentPath === '/'}>
           Book A Room
         </Navbar.Link>
         <Navbar.Link href="/bookings" active={currentPath === '/bookings'}>
