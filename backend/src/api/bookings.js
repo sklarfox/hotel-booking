@@ -124,7 +124,6 @@ router.patch('/:id', async (req, res) => {
     try {
       booking.checkInDate = checkInDate
       booking.checkOutDate = checkOutDate
-      console.log('saving', checkInDate, checkOutDate)
       await booking.save()
       return res.json(booking)
     } catch (error) {
