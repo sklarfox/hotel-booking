@@ -38,7 +38,12 @@ const RoomsRoute = ({ user, setAlert }: RoomsRouteProps) => {
           </Table.Head>
           <Table.Body className="divide-y">
             {rooms.map(room => (
-              <RoomRow key={room.id} room={room} />
+              <RoomRow
+                key={room.id}
+                room={room}
+                user={user}
+                setRooms={setRooms}
+              />
             ))}
           </Table.Body>
         </Table>

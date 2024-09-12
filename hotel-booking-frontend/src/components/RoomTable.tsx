@@ -4,13 +4,16 @@ import { Room } from './CardGrid'
 
 interface RoomRowProps {
   room: Room
+  user: string | null
+  setAlert: React.Dispatch<React.SetStateAction<string>>
+  setRooms: React.Dispatch<React.SetStateAction<Room[]>>
 }
 
 interface RoomFormProps {
+  user: string | null
   setShowForm: (showForm: boolean) => void
   setRooms: React.Dispatch<React.SetStateAction<Room[]>>
   setAlert: React.Dispatch<React.SetStateAction<string>>
-  user: string | null
 }
 
 export const RoomForm = ({
@@ -115,7 +118,6 @@ export const RoomForm = ({
           value={description}
           placeholder="Description"
           onChange={e => setDescription(e.target.value)}
-          required
         />
       </div>
       <div className="flex items-center gap-2">
@@ -126,7 +128,7 @@ export const RoomForm = ({
   )
 }
 
-export const RoomRow = ({ room }: RoomRowProps) => {
+export const RoomRow = ({ room, user, setAlert, setRooms }: RoomRowProps) => {
   const handleDeleteClick = (id: Number) => {
     fetch(import.meta.env.VITE_API_URL + 'rooms/' + id, {
       method: 'DELETE',
@@ -135,7 +137,11 @@ export const RoomRow = ({ room }: RoomRowProps) => {
       },
     })
       .then(res => {
-        console.log(res)
+        if (res.ok) {
+          setRooms(prev => prev.filter(r => r.id !== room.id))
+        } else {
+          setAlert('Error deleting room, please try again.')
+        }
       })
       .catch(error => {
         console.error('Error creating room:', error)
