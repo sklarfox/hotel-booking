@@ -15,6 +15,11 @@ export const searchAvailableRooms = async (checkIn: Date, checkOut: Date) => {
       import.meta.env.VITE_API_URL +
         'rooms' +
         `/?checkInDate=${fmtCheckIn}&checkOutDate=${fmtCheckOut}`,
+      {
+        headers: {
+          Authorization: `Basic ${localStorage.getItem('user')}`,
+        },
+      },
     )
     if (response.ok) {
       return await response.json()
@@ -23,9 +28,3 @@ export const searchAvailableRooms = async (checkIn: Date, checkOut: Date) => {
     return console.error('Error fetching rooms:', error)
   }
 }
-
-export const bookRoom = () => {}
-
-export const deleteRoom = () => {}
-
-export const editRoom = () => {}
