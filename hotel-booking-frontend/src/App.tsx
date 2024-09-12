@@ -3,9 +3,8 @@ import {
   Routes,
   Route,
   Navigate,
-  Outlet,
 } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Header from './components/Header'
 import BookingRoute from './routes/BookingRoute'
 import BookingsRoute from './routes/BookingsRoute'

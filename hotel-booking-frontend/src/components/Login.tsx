@@ -1,4 +1,4 @@
-import { Label, TextInput, Checkbox, Button } from 'flowbite-react'
+import { Label, TextInput, Button } from 'flowbite-react'
 import { useNavigate } from 'react-router-dom'
 
 export default () => {

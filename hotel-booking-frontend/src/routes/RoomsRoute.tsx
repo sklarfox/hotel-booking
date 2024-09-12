@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Table, Button, Label, TextInput, Checkbox } from 'flowbite-react'
+import { Table, Button, Label, TextInput } from 'flowbite-react'
 import { Room } from '../components/CardGrid'
 
 interface RoomRowProps {
