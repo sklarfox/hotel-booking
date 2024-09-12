@@ -1,10 +1,10 @@
 import { Navbar, DarkThemeToggle } from 'flowbite-react'
-import { Link, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 export default () => {
   const location = useLocation()
   const currentPath = location.pathname
-  console.log(currentPath)
+
   return (
     <Navbar fluid rounded>
       <Navbar.Brand href="">
@@ -19,7 +19,7 @@ export default () => {
       </Navbar.Brand>
       <Navbar.Toggle />
       <Navbar.Collapse>
-        <Navbar.Link href="/" active={currentPath === '/book'}>
+        <Navbar.Link href="/" active={currentPath === '/'}>
           Book A Room
         </Navbar.Link>
         <Navbar.Link href="/bookings" active={currentPath === '/bookings'}>

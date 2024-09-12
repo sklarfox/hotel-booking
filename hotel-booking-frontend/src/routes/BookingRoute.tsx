@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Room } from './CardGrid'
-import { DateSelector } from './DateSelector'
-import { AlertBar } from './Alert'
+import { Room } from '../components/CardGrid'
+import { DateSelector } from '../components/DateSelector'
+import { AlertBar } from '../components/Alert'
 import { getTomorrow } from '../utils/helpers'
-import { BookingModal } from './Modal'
-import { CardGrid } from './CardGrid'
+import { BookingModal } from '../components/Modal'
+import { CardGrid } from '../components/CardGrid'
 
 const BookingRoute = () => {
   const [rooms, setRooms] = useState<Room[]>([])
