@@ -49,7 +49,7 @@ export const BookingForm = ({
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Basic ${user}`,
+        Authorization: `Basic ${localStorage.getItem('user')}`,
       },
       body: JSON.stringify(formData),
     })
@@ -139,7 +139,7 @@ export const BookingRow = ({
     fetch(import.meta.env.VITE_API_URL + 'bookings/' + id, {
       method: 'DELETE',
       headers: {
-        Authorization: `Basic ${user}`,
+        Authorization: `Basic ${localStorage.getItem('user')}`,
       },
     })
       .then(res => {

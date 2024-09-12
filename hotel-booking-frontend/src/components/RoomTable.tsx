@@ -48,7 +48,7 @@ export const RoomForm = ({
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Basic ${user}`,
+        Authorization: `Basic ${localStorage.getItem('user')}`,
       },
       body: JSON.stringify(formData),
     })
