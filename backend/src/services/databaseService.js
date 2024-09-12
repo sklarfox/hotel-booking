@@ -48,7 +48,7 @@ export const findAvailableRoomsByDateRange = async (
   reqCheckOutDate,
 ) => {
   const rooms = await Room.findAll({
-    attributes: ['id', 'name', 'price'],
+    attributes: ['id', 'name', 'price', 'description'],
     include: {
       model: Booking,
       required: false,

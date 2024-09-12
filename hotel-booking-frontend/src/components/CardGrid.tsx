@@ -51,6 +51,16 @@ interface CardGridProps {
 }
 
 export const CardGrid = ({ rooms, onBookingClick }: CardGridProps) => {
+  if (rooms.length === 0) {
+    return (
+      <main className="dark:bg-color-gray-800 flex h-screen w-screen justify-center">
+        <span className="text-2xl dark:text-white">
+          No rooms available! Please search for different dates.
+        </span>
+      </main>
+    )
+  }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
       {rooms.map(room => (
