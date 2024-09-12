@@ -23,6 +23,7 @@ export default ({ setUser, setAlert }: LoginProps) => {
 
     if (response.ok) {
       setUser(encodedCredentials)
+      localStorage.setItem('user', encodedCredentials) // TODO migrate all other references to user state to use localStorage
       navigate('/book')
       setAlert('')
     } else {
