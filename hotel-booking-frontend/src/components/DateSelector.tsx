@@ -38,6 +38,8 @@ export const DateSelector = ({
     )
     if (response.ok) {
       setRooms(await response.json())
+    } else {
+      setAlert('Error fetching rooms')
     }
   }
   return (
