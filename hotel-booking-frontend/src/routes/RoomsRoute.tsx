@@ -1,13 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Table, Button } from 'flowbite-react'
 import { Room } from '../components/CardGrid'
-import { RoomRow } from './RoomRow'
-import { RoomForm } from '../components/RoomForm'
-
-export interface RoomRowProps {
-  room: Room
-  setShowForm: (showForm: boolean) => void
-}
+import { RoomRow, RoomForm } from '../components/RoomTable'
 
 const RoomsRoute = ({ user }: { user: string | null }) => {
   useEffect(() => {

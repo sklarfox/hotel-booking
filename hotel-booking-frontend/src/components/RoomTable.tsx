@@ -1,5 +1,11 @@
-import { Label, TextInput, Button } from 'flowbite-react'
+import { Label, TextInput, Button, Table } from 'flowbite-react'
 import { useState } from 'react'
+import { Room } from './CardGrid'
+
+export interface RoomRowProps {
+  room: Room
+  setShowForm: (showForm: boolean) => void
+}
 
 export const RoomForm = () => {
   const [name, setName] = useState('')
@@ -67,5 +73,22 @@ export const RoomForm = () => {
       <div className="flex items-center gap-2"></div>
       <Button type="submit">Submit</Button>
     </form>
+  )
+}
+
+export const RoomRow = ({ room }: RoomRowProps) => {
+  return (
+    <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+      <Table.Cell>{room.name}</Table.Cell>
+      <Table.Cell>{room.id}</Table.Cell>
+      <Table.Cell>{room.beds}</Table.Cell>
+      <Table.Cell>${room.price / 100}</Table.Cell>
+      <Table.Cell>
+        <div className="flex justify-end space-x-2">
+          <Button size="small">Edit</Button>
+          <Button size="small">Delete</Button>
+        </div>
+      </Table.Cell>
+    </Table.Row>
   )
 }

@@ -1,5 +1,5 @@
 import { Navbar, DarkThemeToggle } from 'flowbite-react'
-import { useLocation, Link, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export default () => {
   const navigate = useNavigate()
