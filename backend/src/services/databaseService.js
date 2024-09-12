@@ -27,6 +27,7 @@ export const checkRoomAvailability = async (
   roomId,
   reqCheckInDate,
   reqCheckOutDate,
+  clientEmail,
 ) => {
   const booking = await Booking.findOne({
     where: {
@@ -34,6 +35,7 @@ export const checkRoomAvailability = async (
         { roomId: roomId },
         { checkInDate: { [Op.lt]: reqCheckOutDate } },
         { checkOutDate: { [Op.gt]: reqCheckInDate } },
+        { clientEmail: { [Op.ne]: clientEmail } },
       ],
     },
   })

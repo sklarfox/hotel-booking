@@ -85,7 +85,6 @@ router.post('/', async (req, res, next) => {
 })
 
 router.patch('/:id', async (req, res) => {
-  // TODO Implement authorization check: admin or matching username
   const id = Number(req.params.id)
 
   let booking
