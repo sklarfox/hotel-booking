@@ -2,33 +2,69 @@ import { Label, TextInput, Button, Table } from 'flowbite-react'
 import { useState } from 'react'
 import { Room } from './CardGrid'
 
-export interface RoomRowProps {
+interface RoomRowProps {
   room: Room
-  setShowForm: (showForm: boolean) => void
 }
 
-export const RoomForm = () => {
+interface RoomFormProps {
+  setShowForm: (showForm: boolean) => void
+  setRooms: React.Dispatch<React.SetStateAction<Room[]>>
+  setAlert: React.Dispatch<React.SetStateAction<string>>
+  user: string | null
+}
+
+export const RoomForm = ({
+  setShowForm,
+  setRooms,
+  setAlert,
+  user,
+}: RoomFormProps) => {
   const [name, setName] = useState('')
   const [beds, setBeds] = useState('')
   const [price, setPrice] = useState('')
+  const [description, setDescription] = useState('')
 
   const handleRoomSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const formData = {
       name,
-      beds,
-      price,
+      beds: Number(beds),
+      price: Number(price) * 100,
+      description,
     }
+
+    if (!user || Number.isNaN(beds) || Number.isNaN(price)) {
+      setAlert('Please fill out all required fields and check the formatting.')
+      return
+    }
+
     fetch(import.meta.env.VITE_API_URL + 'rooms', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Basic ${user}`,
       },
       body: JSON.stringify(formData),
     })
       .then(res => res.json())
-      .then(data => console.log('new room', data))
-      .catch(error => console.error('Error creating room:', error))
+      .then(data => {
+        setRooms(prev => [...prev, data])
+        setName('')
+        setBeds('')
+        setPrice('')
+        setShowForm(false)
+      })
+      .catch(error => {
+        console.error('Error creating room:', error)
+        setAlert('Error creating room, please try again.')
+      })
+  }
+
+  const handleCancelClick = () => {
+    setName('')
+    setBeds('')
+    setPrice('')
+    setShowForm(false)
   }
 
   return (
@@ -66,17 +102,47 @@ export const RoomForm = () => {
           id="price"
           type="text"
           value={price}
+          placeholder="$"
           onChange={e => setPrice(e.target.value)}
           required
         />
+        <div className="mb-2 block">
+          <Label htmlFor="description" value="Description (optional)" />
+        </div>
+        <TextInput
+          id="description"
+          type="textarea"
+          value={description}
+          placeholder="Description"
+          onChange={e => setDescription(e.target.value)}
+          required
+        />
       </div>
-      <div className="flex items-center gap-2"></div>
-      <Button type="submit">Submit</Button>
+      <div className="flex items-center gap-2">
+        <Button type="submit">Submit</Button>
+        <Button onClick={handleCancelClick}>Cancel</Button>
+      </div>
     </form>
   )
 }
 
 export const RoomRow = ({ room }: RoomRowProps) => {
+  const handleDeleteClick = (id: Number) => {
+    fetch(import.meta.env.VITE_API_URL + 'rooms/' + id, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Basic ${user}`,
+      },
+    })
+      .then(res => {
+        console.log(res)
+      })
+      .catch(error => {
+        console.error('Error creating room:', error)
+        setAlert('Error deleting room, please try again.')
+      })
+  }
+
   return (
     <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
       <Table.Cell>{room.name}</Table.Cell>
@@ -86,7 +152,9 @@ export const RoomRow = ({ room }: RoomRowProps) => {
       <Table.Cell>
         <div className="flex justify-end space-x-2">
           <Button size="small">Edit</Button>
-          <Button size="small">Delete</Button>
+          <Button size="small" onClick={() => handleDeleteClick(room.id)}>
+            Delete
+          </Button>
         </div>
       </Table.Cell>
     </Table.Row>

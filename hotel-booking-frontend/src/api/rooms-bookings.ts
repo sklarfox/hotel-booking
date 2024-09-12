@@ -23,3 +23,9 @@ export const searchAvailableRooms = async (checkIn: Date, checkOut: Date) => {
     return console.error('Error fetching rooms:', error)
   }
 }
+
+export const bookRoom = () => {}
+
+export const deleteRoom = () => {}
+
+export const editRoom = () => {}

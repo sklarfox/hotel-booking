@@ -3,7 +3,12 @@ import { Table, Button } from 'flowbite-react'
 import { Room } from '../components/CardGrid'
 import { RoomRow, RoomForm } from '../components/RoomTable'
 
-const RoomsRoute = ({ user }: { user: string | null }) => {
+interface RoomsRouteProps {
+  user: string | null
+  setAlert: React.Dispatch<React.SetStateAction<string>>
+}
+
+const RoomsRoute = ({ user, setAlert }: RoomsRouteProps) => {
   useEffect(() => {
     fetch(import.meta.env.VITE_API_URL + 'rooms', {
       headers: {
@@ -16,7 +21,7 @@ const RoomsRoute = ({ user }: { user: string | null }) => {
   }, [])
 
   const [rooms, setRooms] = useState<Room[]>([])
-  const [showForm, setShowForm] = useState(true)
+  const [showForm, setShowForm] = useState(false)
 
   return (
     <main className="flex min-h-screen justify-center gap-2 p-10 dark:bg-gray-600">
@@ -33,12 +38,21 @@ const RoomsRoute = ({ user }: { user: string | null }) => {
           </Table.Head>
           <Table.Body className="divide-y">
             {rooms.map(room => (
-              <RoomRow key={room.id} room={room} setShowForm={setShowForm} />
+              <RoomRow key={room.id} room={room} />
             ))}
           </Table.Body>
         </Table>
         <div className="m-4 flex items-center justify-center">
-          {showForm ? <RoomForm /> : <Button>Add a new room</Button>}
+          {showForm ? (
+            <RoomForm
+              setShowForm={setShowForm}
+              user={user}
+              setRooms={setRooms}
+              setAlert={setAlert}
+            />
+          ) : (
+            <Button onClick={() => setShowForm(true)}>Add a new room</Button>
+          )}
         </div>
       </div>
     </main>

@@ -4,7 +4,7 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Header from './components/Header'
 import BookingRoute from './routes/BookingRoute'
 import BookingsRoute from './routes/BookingsRoute'
@@ -16,6 +16,13 @@ import { AlertBar } from './components/Alert'
 function App() {
   const [user, setUser] = useState<string | null>(null)
   const [alert, setAlert] = useState('')
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setAlert('')
+    }, 5000)
+    return () => clearTimeout(timeout)
+  }, [alert])
 
   return (
     <Router>
