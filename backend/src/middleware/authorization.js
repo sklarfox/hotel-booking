@@ -14,7 +14,7 @@ export const authHandler = basicAuth({
     }
     return false
   },
-  challenge: true,
+  challenge: false,
 })
 
 export const checkRole = role => {
