@@ -7,14 +7,24 @@ import { getNumberOfNights, getTomorrow } from './utils/helpers'
 import { Alert, Modal, Button } from 'flowbite-react'
 
 const AlertBar = ({ alert }: { alert: string }) => {
-  return (
-    <Alert color="warning" rounded>
-      <span className="font-medium">Alert!</span> {alert}
-    </Alert>
-  )
+  if (alert.includes('confirmed')) {
+    return (
+      <Alert color="success" rounded>
+        <span className="font-medium">Success!</span> {alert}
+      </Alert>
+    )
+  } else {
+    return (
+      <Alert color="warning" rounded>
+        <span className="font-medium">Alert!</span> {alert}
+      </Alert>
+    )
+  }
 }
 
 interface BookingModalProps {
+  setAlert: React.Dispatch<React.SetStateAction<string>>
+  setRooms: React.Dispatch<React.SetStateAction<Room[]>>
   showModal: boolean
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>
   checkIn: Date
@@ -23,6 +33,8 @@ interface BookingModalProps {
 }
 
 const BookingModal = ({
+  setAlert,
+  setRooms,
   showModal,
   setShowModal,
   checkIn,
@@ -40,12 +52,19 @@ const BookingModal = ({
       body: JSON.stringify({
         roomId: room.id,
         clientEmail: 'hello@hello.com', // TODO remove hardcoded email
-        checkIn: checkIn.toISOString().split('T')[0],
-        checkOut: checkOut.toISOString().split('T')[0],
+        checkInDate: checkIn.toISOString().split('T')[0],
+        checkOutDate: checkOut.toISOString().split('T')[0],
       }),
     })
 
-    console.log(response.status)
+    if (response.ok) {
+      setAlert('Your reservation is confirmed!')
+      setShowModal(false)
+      setRooms(prev => prev.filter(ele => ele !== room))
+    } else {
+      setAlert('Your reservation could not be booked. Please try again.')
+      setShowModal(false)
+    }
   }
   return (
     <Modal dismissible show={showModal} onClose={() => setShowModal(false)}>
@@ -78,7 +97,8 @@ function App() {
   const [alert, setAlert] = useState('')
   const [checkIn, setCheckIn] = useState<Date>(new Date())
   const [checkOut, setCheckOut] = useState<Date>(getTomorrow(new Date()))
-  const [showModal, setShowModal] = useState(true)
+  const [showModal, setShowModal] = useState(false)
+  const [selectedRoom, setSelectedRoom] = useState<Room | undefined>(undefined)
 
   useEffect(() => {
     fetch(import.meta.env.VITE_API_URL + 'rooms')
@@ -88,7 +108,9 @@ function App() {
   }, [])
 
   const handleBookingClick = (id: number) => {
-    console.log('Booking room with id:', id, checkIn, checkOut)
+    const room = rooms.find(room => room.id === id)
+    setSelectedRoom(room)
+    setShowModal(prev => !!room || prev)
   }
   return (
     <>
@@ -98,7 +120,9 @@ function App() {
         setShowModal={setShowModal}
         checkIn={checkIn}
         checkOut={checkOut}
-        room={rooms.find(room => room.id === 1)}
+        room={selectedRoom}
+        setAlert={setAlert}
+        setRooms={setRooms}
       ></BookingModal>
       {alert && <AlertBar alert={alert}></AlertBar>}
       <span className="flex justify-center bg-gray-300 p-8 dark:bg-gray-900">
