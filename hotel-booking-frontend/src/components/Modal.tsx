@@ -10,6 +10,7 @@ interface BookingModalProps {
   checkIn: Date
   checkOut: Date
   room: Room | undefined
+  user: string | null
 }
 
 export const BookingModal = ({
@@ -20,6 +21,7 @@ export const BookingModal = ({
   checkIn,
   checkOut,
   room,
+  user,
 }: BookingModalProps) => {
   if (room === undefined) {
     return null
@@ -28,10 +30,13 @@ export const BookingModal = ({
   const handleReservationClick = async () => {
     const response = await fetch(import.meta.env.VITE_API_URL + 'bookings', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${user}`,
+      },
       body: JSON.stringify({
         roomId: room.id,
-        clientEmail: 'hello@hello.com', // TODO remove hardcoded email
+        clientEmail: 'hello@hello.com',
         checkInDate: checkIn.toISOString().split('T')[0],
         checkOutDate: checkOut.toISOString().split('T')[0],
       }),

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Room } from '../components/CardGrid'
 import { DateSelector } from '../components/DateSelector'
-import { AlertBar } from '../components/Alert'
 import { getTomorrow } from '../utils/helpers'
 import { BookingModal } from '../components/Modal'
 import { CardGrid } from '../components/CardGrid'
@@ -44,6 +43,7 @@ const BookingRoute = ({ user, setAlert }: BookingRouteProps) => {
         room={selectedRoom}
         setAlert={setAlert}
         setRooms={setRooms}
+        user={user}
       ></BookingModal>
       <span className="flex justify-center bg-gray-300 p-8 dark:bg-gray-900">
         <DateSelector
@@ -55,7 +55,7 @@ const BookingRoute = ({ user, setAlert }: BookingRouteProps) => {
           setCheckOut={setCheckOut}
         />
       </span>
-      <main className="flex min-h-screen items-center justify-center gap-2 dark:bg-gray-800">
+      <main className="flex h-auto justify-center gap-2 pt-10 dark:bg-gray-800">
         <CardGrid rooms={rooms} onBookingClick={handleBookingClick}></CardGrid>
       </main>
     </>
