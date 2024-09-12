@@ -150,7 +150,7 @@ router.delete('/:id', checkRole('admin'), async (req, res) => {
   if (booking !== null) {
     booking.destroy()
   }
-  res.send(204)
+  res.sendStatus(204)
 })
 
 export default router
