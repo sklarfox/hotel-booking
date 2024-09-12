@@ -24,6 +24,10 @@ function App() {
     return () => clearTimeout(timeout)
   }, [alert])
 
+  useEffect(() => {
+    setUser(localStorage.getItem('user'))
+  }, [user])
+
   return (
     <Router>
       <Header></Header>

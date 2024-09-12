@@ -1,6 +1,6 @@
 import { Label, TextInput, Button } from 'flowbite-react'
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface LoginProps {
   setUser: React.Dispatch<React.SetStateAction<string | null>>
@@ -11,6 +11,14 @@ export default ({ setUser, setAlert }: LoginProps) => {
   const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+
+  useEffect(() => {
+    const user = localStorage.getItem('user')
+    if (user) {
+      setUser(user)
+      navigate('/book')
+    }
+  }, [])
 
   const handleUserLogin = async (e: any) => {
     e.preventDefault()
@@ -23,7 +31,7 @@ export default ({ setUser, setAlert }: LoginProps) => {
 
     if (response.ok) {
       setUser(encodedCredentials)
-      localStorage.setItem('user', encodedCredentials) // TODO migrate all other references to user state to use localStorage
+      localStorage.setItem('user', encodedCredentials)
       navigate('/book')
       setAlert('')
     } else {

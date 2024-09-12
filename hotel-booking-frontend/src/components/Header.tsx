@@ -1,4 +1,4 @@
-import { Navbar, DarkThemeToggle } from 'flowbite-react'
+import { Navbar, DarkThemeToggle, Button } from 'flowbite-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 export default () => {
@@ -43,6 +43,14 @@ export default () => {
         </Navbar.Link>
       </Navbar.Collapse>
       <div className="flex md:order-2">
+        <Button
+          onClick={() => {
+            localStorage.removeItem('user')
+            navigate('/login')
+          }}
+        >
+          Logout
+        </Button>
         <DarkThemeToggle />
       </div>
     </Navbar>
