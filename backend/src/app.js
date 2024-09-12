@@ -22,8 +22,8 @@ app.get('/sync', async (req, res) => {
   res.status(204)
 })
 
-app.use('/api/v1/rooms', roomsRouter) // roomsRouter has some public endpoints, authHandler applied to all write ops
-app.use(authHandler) // authHandler applies to all routes below this line
+app.use(authHandler)
+app.use('/api/v1/rooms', roomsRouter)
 app.use('/api/v1/bookings', bookingsRouter)
 
 // eslint-disable-next-line no-unused-vars
