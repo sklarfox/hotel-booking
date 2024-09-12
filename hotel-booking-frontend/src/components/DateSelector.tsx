@@ -30,6 +30,11 @@ export const DateSelector = ({
       import.meta.env.VITE_API_URL +
         'rooms' +
         `/?checkInDate=${checkIn.toISOString().split('T')[0]}&checkOutDate=${checkOut.toISOString().split('T')[0]}`,
+      {
+        headers: {
+          Authorization: `Basic ${localStorage.getItem('user')}`,
+        },
+      },
     )
     if (response.ok) {
       setRooms(await response.json())
