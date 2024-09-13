@@ -3,12 +3,17 @@ import NodeCache from 'node-cache'
 
 const cache = new NodeCache({ stdTTL: 60 * 60 })
 
-export const getWeatherAtCheckIn = async (lat, lon, checkInDate) => {
-  const cacheKey = `${lat},${lon}`
-  let fullForecast = cache.get(cacheKey)
+class HTTPResponseError extends Error {
+  constructor(response) {
+    super(`HTTP Error Response: ${response.status} ${response.statusText}`)
+    this.response = response
+  }
+}
 
-  if (fullForecast === undefined) {
-    const response = await fetch(
+const callWeatherAPI = async (lat, lon) => {
+  let pointsResponse
+  try {
+    pointsResponse = await fetch(
       `https://api.weather.gov/points/${lat},${lon}`,
       {
         headers: {
@@ -18,23 +23,52 @@ export const getWeatherAtCheckIn = async (lat, lon, checkInDate) => {
       },
     )
 
-    const data = await response.json()
-    const forecastUrl = data.properties.forecast
+    if (!pointsResponse.ok) {
+      throw new HTTPResponseError(pointsResponse)
+    }
+  } catch (error) {
+    console.error(error)
+    return undefined
+  }
 
-    const forecastResponse = await fetch(forecastUrl, {
+  const data = await pointsResponse.json()
+  const forecastUrl = data.properties.forecast
+
+  let forecastResponse
+  try {
+    forecastResponse = await fetch(forecastUrl, {
       headers: {
         'User-Agent': process.env.WEATHER_API_KEY || 'MyWeatherApp',
         'Content-Type': 'application/ld+json',
       },
     })
 
-    fullForecast = await forecastResponse.json()
-    fullForecast = fullForecast.properties.periods.filter(
-      period => period.isDaytime,
-    )
-
-    cache.set(cacheKey, fullForecast)
+    if (!forecastResponse.ok) {
+      throw new HTTPResponseError(forecastResponse)
+    }
+  } catch (error) {
+    console.error(error)
+    return undefined
   }
 
-  return fullForecast.find(day => day.startTime.split('T')[0] === checkInDate)
+  const fullForecast = await forecastResponse.json()
+  return fullForecast.properties.periods.filter(period => period.isDaytime)
+}
+
+export const getWeatherAtCheckIn = async (lat, lon, checkInDate) => {
+  const cacheKey = `${lat},${lon}`
+  let fullForecast = cache.get(cacheKey)
+
+  if (fullForecast === undefined) {
+    try {
+      fullForecast = await callWeatherAPI(lat, lon)
+      if (fullForecast) {
+        cache.set(cacheKey, fullForecast)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  return fullForecast?.find(day => day.startTime.split('T')[0] === checkInDate)
 }
