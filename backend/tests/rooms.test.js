@@ -6,13 +6,15 @@ import {
   getRoomById,
 } from '../src/services/databaseService.js'
 import { Room } from '../src/models/schema.js'
-import { testRooms } from './testData.js'
+import { mockWeather, testRooms } from './testData.js'
+import { getWeatherAtCheckIn } from '../src/services/weatherService.js'
 
 jest.mock('../src/services/databaseService.js')
 jest.mock('../src/models/schema.js')
 jest.mock('../src/middleware/authorization.js', () => ({
   checkRole: () => (req, res, next) => next(),
 }))
+jest.mock('../src/services/weatherService.js')
 
 const app = express()
 app.use(express.json())
@@ -30,6 +32,7 @@ beforeEach(() => {
     save: () => {},
     destroy: () => {},
   })
+  getWeatherAtCheckIn.mockResolvedValue(mockWeather)
 })
 
 describe('GET /rooms', () => {

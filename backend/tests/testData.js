@@ -57,3 +57,23 @@ export const testBookings = [
     roomId: 2,
   },
 ]
+
+export const mockWeather = {
+  number: 5,
+  name: 'Sunday',
+  startTime: '2024-09-15T06:00:00-04:00',
+  endTime: '2024-09-15T18:00:00-04:00',
+  isDaytime: true,
+  temperature: 76,
+  temperatureUnit: 'F',
+  temperatureTrend: '',
+  probabilityOfPrecipitation: {
+    unitCode: 'wmoUnit:percent',
+    value: null,
+  },
+  windSpeed: '6 to 13 mph',
+  windDirection: 'E',
+  icon: 'https://api.weather.gov/icons/land/day/few?size=medium',
+  shortForecast: 'Sunny',
+  detailedForecast: 'Sunny, with a high near 76. East wind 6 to 13 mph.',
+}
