@@ -11,8 +11,6 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: mydb
       DB_HOST: postgres
-    volumes:
-      - ./backend:/usr/src/app
 
   frontend:
     build: ./hotel-booking-frontend
