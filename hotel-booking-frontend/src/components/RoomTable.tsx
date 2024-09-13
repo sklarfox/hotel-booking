@@ -68,10 +68,14 @@ export const RoomForm = ({
 
   const handleEditSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    let formattedPrice: string | number = price.trim()
+    formattedPrice = price.includes('$')
+      ? Number(price.slice(1))
+      : Number(price)
     const formData = {
       name,
       beds: Number(beds),
-      price: Number(price) * 100,
+      price: formattedPrice,
       description,
     }
 
@@ -150,7 +154,7 @@ export const RoomForm = ({
           id="price"
           type="text"
           value={price}
-          placeholder={room ? `$${room.price / 100}` : 'Price'}
+          placeholder={room ? `$${room.price / 100}` : 'xx.xx'}
           onChange={e => setPrice(e.target.value)}
           required={!room}
         />

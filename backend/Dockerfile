@@ -1,4 +1,3 @@
-# Use Node.js LTS version as base image
 FROM node:18-alpine
 
 WORKDIR /usr/src/app
