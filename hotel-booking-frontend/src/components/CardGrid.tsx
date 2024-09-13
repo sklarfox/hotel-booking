@@ -14,6 +14,17 @@ interface RoomCardProps {
   onBookingClick: (id: number) => void
 }
 
+const WeatherInfo = ({ room }: { room: Room }) => {
+  return (
+    <span className="flex justify-center">
+      <h2 className="text-1xl font-bold text-gray-900 dark:text-white">
+        Weather at check in:
+      </h2>
+      <img src={room?.weatherAtCheckIn?.icon} className="ml-4 size-10"></img>
+    </span>
+  )
+}
+
 const RoomCard = ({ room, onBookingClick }: RoomCardProps) => {
   const handleBookRoom = () => {
     onBookingClick(room.id)
@@ -27,12 +38,7 @@ const RoomCard = ({ room, onBookingClick }: RoomCardProps) => {
       <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
         {room.name}
       </h5>
-      <span className="flex justify-center">
-        <h2 className="text-1xl font-bold text-gray-900 dark:text-white">
-          Weather at check in:
-        </h2>
-        <img src={room?.weatherAtCheckIn?.icon} className="ml-4 size-10"></img>
-      </span>
+      {room.weatherAtCheckIn && <WeatherInfo room={room}></WeatherInfo>}
       <p className="font-normal text-gray-700 dark:text-gray-400">
         {room.description}
       </p>
