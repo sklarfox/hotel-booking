@@ -29,7 +29,6 @@ export const BookingForm = ({
   setShowForm,
   setBookings,
   setAlert,
-  user,
   booking,
 }: BookingFormProps) => {
   const [clientEmail, setClientEmail] = useState('')
@@ -130,7 +129,6 @@ export const BookingForm = ({
 
 export const BookingRow = ({
   booking,
-  user,
   setAlert,
   setBookings,
   setShowForm,
