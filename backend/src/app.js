@@ -16,12 +16,6 @@ app.get('/', (req, res) => {
   res.send('hello world')
 })
 
-app.get('/sync', async (req, res) => {
-  // TODO remove this route after development
-  sequelize.sync({ force: true })
-  res.status(204)
-})
-
 app.use(authHandler)
 app.use('/api/v1/rooms', roomsRouter)
 app.use('/api/v1/bookings', bookingsRouter)
