@@ -37,7 +37,8 @@ export const DateSelector = ({
       },
     )
     if (response.ok) {
-      setRooms(await response.json())
+      const data = await response.json()
+      setRooms(data)
     } else {
       setAlert('Error fetching rooms')
     }

@@ -5,7 +5,7 @@ import {
   getRoomById,
 } from '../services/databaseService.js'
 import { validBookingDates } from '../utils/helpers.js'
-import { authHandler, checkRole } from '../middleware/authorization.js'
+import { getWeatherAtCheckIn } from '../services/weatherService.js'
 
 const router = express.Router()
 
@@ -18,7 +18,24 @@ router.get('/', async (req, res, next) => {
         checkInDate,
         checkOutDate,
       )
-      res.json(rooms)
+
+      // TODO remove hardcoding location
+      // Ideally each room would have a location parameter which could be used to find the weather for the specific room
+      // Current implementation is hardcoding the coordinates for New York City, assumes all rooms are at the same location
+      const weatherAtCheckIn = await getWeatherAtCheckIn(
+        40.7128,
+        -74.006,
+        checkInDate,
+      )
+
+      let payload = rooms.map(room => room.dataValues)
+
+      console.log(weatherAtCheckIn)
+      payload.forEach(room => {
+        room.weatherAtCheckIn = weatherAtCheckIn
+      })
+
+      res.json(payload)
     } else if (checkInDate || checkOutDate) {
       res
         .status(400)
