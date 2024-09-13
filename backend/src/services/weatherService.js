@@ -1,5 +1,4 @@
-import fetch from 'node-fetch'
-
+import axios from 'axios'
 import NodeCache from 'node-cache'
 
 const cache = new NodeCache({ stdTTL: 60 * 60 })
@@ -14,7 +13,7 @@ class HTTPResponseError extends Error {
 const callWeatherAPI = async (lat, lon) => {
   let pointsResponse
   try {
-    pointsResponse = await fetch(
+    pointsResponse = await axios.get(
       `https://api.weather.gov/points/${lat},${lon}`,
       {
         headers: {
@@ -24,7 +23,7 @@ const callWeatherAPI = async (lat, lon) => {
       },
     )
 
-    if (!pointsResponse.ok) {
+    if (!(pointsResponse.status >= 200 || pointsResponse.status <= 300)) {
       throw new HTTPResponseError(pointsResponse)
     }
   } catch (error) {
@@ -32,19 +31,19 @@ const callWeatherAPI = async (lat, lon) => {
     return undefined
   }
 
-  const data = await pointsResponse.json()
+  const data = pointsResponse.data
   const forecastUrl = data.properties.forecast
 
   let forecastResponse
   try {
-    forecastResponse = await fetch(forecastUrl, {
+    forecastResponse = await axios.get(forecastUrl, {
       headers: {
         'User-Agent': process.env.WEATHER_API_KEY || 'MyWeatherApp',
         'Content-Type': 'application/ld+json',
       },
     })
 
-    if (!forecastResponse.ok) {
+    if (!(pointsResponse.status >= 200 || pointsResponse.status <= 300)) {
       throw new HTTPResponseError(forecastResponse)
     }
   } catch (error) {
@@ -52,7 +51,7 @@ const callWeatherAPI = async (lat, lon) => {
     return undefined
   }
 
-  const fullForecast = await forecastResponse.json()
+  const fullForecast = forecastResponse.data
   return fullForecast.properties.periods.filter(period => period.isDaytime)
 }
 
