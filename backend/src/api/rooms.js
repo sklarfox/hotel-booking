@@ -30,7 +30,6 @@ router.get('/', async (req, res, next) => {
 
       let payload = rooms.map(room => room.dataValues)
 
-      console.log(weatherAtCheckIn)
       payload.forEach(room => {
         room.weatherAtCheckIn = weatherAtCheckIn
       })
