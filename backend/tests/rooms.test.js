@@ -133,7 +133,9 @@ describe('POST /rooms', () => {
 
   it('should return a 500 status code if database call fails', async () => {
     Room.create.mockRejectedValue(new Error('Database error'))
-    const response = await request(app).post('/rooms').send(testRooms[0])
+    const response = await request(app)
+      .post('/rooms')
+      .send(testRooms[0].dataValues)
     expect(response.status).toBe(500)
     expect(response.body).toEqual({})
     expect(Room.findAll).toHaveBeenCalledTimes(2)
