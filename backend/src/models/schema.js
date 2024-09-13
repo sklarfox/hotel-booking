@@ -30,4 +30,13 @@ Room.hasMany(Booking, {
 })
 Booking.belongsTo(Room)
 
+await sequelize
+  .sync({ alter: true })
+  .then(() => {
+    console.log('Database & tables synced')
+  })
+  .catch(err => {
+    console.error('Unable to sync database:', err)
+  })
+
 export { Room, Booking }

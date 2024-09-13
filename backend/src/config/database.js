@@ -13,20 +13,13 @@ const sequelize = new Sequelize(
     logging: false,
   },
 )
-console.log(
-  process.env.POSTGRES_DB,
-  process.env.POSTGRES_USER,
-  process.env.POSTGRES_PASSWORD,
-  typeof process.env.DB_HOST,
-)
 
-await sequelize
-  .sync({ alter: true })
-  .then(() => {
-    console.log('Database & tables synced')
-  })
-  .catch(err => {
-    console.error('Unable to sync database:', err)
-  })
+try {
+  await sequelize.authenticate()
+  console.log('Connection has been established successfully.')
+  console.log('host', process.env.DB_HOST)
+} catch (error) {
+  console.error('Unable to connect to the database:', error)
+}
 
 export default sequelize
