@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Table, Button } from 'flowbite-react'
+import { Table } from 'flowbite-react'
 import { BookingRow, BookingForm, Booking } from '../components/BookingTable'
 
 interface BookingsRouteProps {
