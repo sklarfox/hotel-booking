@@ -18,11 +18,17 @@ const BookingRoute = ({ user, setAlert }: BookingRouteProps) => {
   const [selectedRoom, setSelectedRoom] = useState<Room | undefined>(undefined)
 
   useEffect(() => {
-    fetch(import.meta.env.VITE_API_URL + 'rooms', {
-      headers: {
-        Authorization: `Basic ${user}`,
+    fetch(
+      import.meta.env.VITE_API_URL +
+        'rooms' +
+        `/?checkInDate=${checkIn.toISOString().split('T')[0]}` +
+        `&checkOutDate=${checkOut.toISOString().split('T')[0]}`,
+      {
+        headers: {
+          Authorization: `Basic ${user}`,
+        },
       },
-    })
+    )
       .then(response => response.json())
       .then(data => setRooms(data))
       .catch(error => console.error('Error fetching rooms:', error))
