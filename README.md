@@ -1,35 +1,39 @@
 # Hotel Booking App
 
-Welcome! Thank you for your time reviewing this project.
+👋 Hi there! Thank you for your time reviewing this project.
 
-## Quickstart
+## 🚀 Quickstart
 
 
 To quickly get started:
 
-Clone this repo to your local machine:
+1. Clone this repo to your local machine:
 
-` git clone https://github.com/sklarfox/hotel-booking/`
+    ` git clone https://github.com/sklarfox/hotel-booking/`
 
-`cd hotel-booking`
+    `cd hotel-booking`
 
-Then, ensure that you have Docker and Docker Compose installed on your system. Once they are, run the following command:
+2. Add an environment variable for the frontend application by running the command:
 
-`docker-compose up --build` 
+    `echo "VITE_API_URL='http://localhost:3000/api/v1/'" >> ./hotel-booking-frontend/.env`
 
-Ensure that both ports `3000` and `5173` are available.
+3. Then, ensure that you have Docker and Docker Compose installed on your system. Once they are, run the following command:
 
-If the initial build has already been run, you can simply run `docker-compose up` from the root directory to spin up the container.
+    `docker-compose up --build` 
 
-After the docker compose operation is complete, view the application in your web browser at: 
+    Ensure that both ports `3000` and `5173` are available.
 
-http://localhost:5173/
+4. If the initial build has already been run, you can simply run `docker-compose up` from the root directory to spin up the container.
 
-Log in with the following credentials:
+    After the docker compose operation is complete, view the application in your web browser at: 
 
-`username: admin`
+    http://localhost:5173/
 
-`password: letmein`
+5. Log in with the following credentials:
+
+    `username: admin`
+
+    `password: letmein`
 
 ## Using the app
 
