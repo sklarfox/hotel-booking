@@ -1,4 +1,7 @@
+# Frontend
 VITE_API_URL=
+
+# Backend
 DB_HOST=
 POSTGRES_DB=
 POSTGRES_USER=
