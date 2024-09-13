@@ -1,11 +1,12 @@
 # Hotel Booking App
 
-👋 Hi there! Thank you for your time reviewing this project.
+👋 Hi there! Thank you for your time reviewing this project. Feel free to reach out me directly if you have any questions/issues arrise at hello@alexsklar.dev
+
+Thank you!
 
 ## 🚀 Quickstart
 
-
-To quickly get started:
+To up and running:
 
 1. Clone this repo to your local machine:
 
@@ -47,7 +48,7 @@ description: Two queen beds and an in room kitchenette.
 
 Try adding a couple other rooms!
 
-Once you have some rooms added to the database, it is time to make a booking! Navigate to 'Book A Room' in the nav bar.
+Once you have some rooms added to the database, it is time to make a booking. Navigate to 'Book A Room' in the nav bar.
 
 By default, this page will show the available rooms today, for one night. You should see all the rooms you've added on the Rooms page.
 
@@ -55,7 +56,7 @@ If the dates being requested are within approx. 7 days, then the weather at chec
 
 You can change the dates at the top of the screen. Since no bookings have been made yet, all rooms will be available.
 
-Click on the 'Book Now' button for one of the rooms, confirm in the popup, and congrats! You are going on vacation!
+Click on the 'Book Now' button for one of the rooms, confirm in the popup, and congrats! You are going on vacation! 🌴🌴🌴
 
 The room you've booked should no longer appear on the current screen, as its unavailable. If you select new booking dates that don't conflict with your reservation, the room will reappear.
 
@@ -69,8 +70,6 @@ Feel free to poke around the app, and submit any bugs you find (which there are 
 - Backend: Node.js, Express.js, Sequelize, node-cache
 - External API: weather.gov
 - Database: PostgreSQL
-
-## Additional Notes
 
 # Future Work
 
@@ -106,6 +105,9 @@ Currently, all available rooms appear in the search results. Generally, the expe
 
 The app currently uses the database primary key as the unique identifier for all entries. A UUID would be added to each entity, and this would be the data sent to the client and used when requesting specific entries.
 
+## Expand Tables
+
+The current database design is quite rudimentiary, and has many areas it could be expanded. For the scope of this project, the simple two table design was left as-is.
 
 
 # API Documentation
