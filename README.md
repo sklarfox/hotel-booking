@@ -73,6 +73,14 @@ Feel free to poke around the app, and submit any bugs you find (which there are 
 
 # Future Work
 
+## Remove placeholder technologies (authentication, authorization, caching)
+
+Two simple npm packages were chosen for authentication and caching; `express-basic-auth` and `node-cache`, respectively. At time of production, the simplicity of these lightweight packages were deemed more suitable for the MVP nature of this project, rather than implementing a more production-ready solution for both of these requirements.
+
+However, for continued development, more robust solutions would be required. For authorization, `express-basic-auth` could be replaced with JSON web tokens or by generating API keys per user.
+
+Similarly, an external caching solution would be needed. In particular, as the app scaled, there would likely be multiple web servers processing user requests. With the current implementation, each server would have its own internal cache. The better solution would be to set up a redis cache, so that all the servers could share the same cache. As currently implemented, each server would be maintaining it's own cache, resulting in repetitive external API calls.
+
 ## Sorting and Pagination for API endpoints
 
 Currently the back end endpoints simply provide an array of all of the results from the database query. Due to time constraints, sorting and pagination was not implemented. However, given additional time, they would be added as additional query params, alongside the existing `checkInDate` and `checkOutDate` parameters. So, an example query might be:
